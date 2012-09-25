@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kate/Plugin
+X-KDE-Library=katerecentfileviewerplugin
+X-Kate-Version=2.9
+Name=Recent File Viewer
+Comment=View your recent accessed files

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kate/Plugin
+X-KDE-Library=katefastopenplugin
+X-Kate-Version=2.8
+Name=Fast Open
+Comment=Fast Open document

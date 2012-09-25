@@ -1,0 +1,16 @@
+<!DOCTYPE kpartgui>
+<gui name="katerecentfileviewer" library="libkaterecentfileviewerplugin" version="2">
+<MenuBar>
+ <Menu name="tools"><text>&amp;Tools</text>
+    <Action name="recentfileviewer_show_1" />
+    <Action name="recentfileviewer_show_2" />
+    <Action name="recentfileviewer_show_3" />
+    <Action name="recentfileviewer_show_4" />
+    <Action name="recentfileviewer_show_5" />
+    <Action name="recentfileviewer_show_6" />
+    <Action name="recentfileviewer_show_7" />
+    <Action name="recentfileviewer_show_8" />
+    <Action name="recentfileviewer_show_9" />
+ </Menu>
+</MenuBar>
+</gui>

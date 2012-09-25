@@ -1,0 +1,14 @@
+<!DOCTYPE kpartgui>
+<gui name="katekonsole" library="katekonsoleplugin" version="3">
+<MenuBar>
+ <Menu name="tools"><text>&amp;Tools</text>
+    <Action name="katekonsole_tools_pipe_to_terminal" group="tools_operations"/>
+    <Action name="katekonsole_tools_sync" group="tools_operations"/>
+    <Action name="katekonsole_tools_toggle_focus" group="tools_operations"/>
+    <Action name="katekonsole_tools_arc_build" group="tools_operations"/>
+    <Action name="katekonsole_tools_gcc_compile" group="tools_operations"/>
+    <Action name="katekonsole_tools_run_with_input" group="tools_operations"/>
+    <Action name="katekonsole_pick_file" group="tools_operations"/>
+ </Menu>
+</MenuBar>
+</gui>

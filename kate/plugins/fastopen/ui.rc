@@ -1,0 +1,9 @@
+<!DOCTYPE kpartgui>
+<gui name="katefastopen" library="libkatefastopenplugin" version="2">
+<MenuBar>
+  <Menu name="go"><text>&amp;Go</text>
+    <Action name="documents_fastopen"/>
+    <Action name="documents_fastopen_buffer"/>
+  </Menu>
+</MenuBar>
+</gui>
