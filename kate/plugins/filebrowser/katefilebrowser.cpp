@@ -26,6 +26,8 @@
 
 #include "katebookmarkhandler.h"
 
+#include "katefilebrowserdialog.h"
+
 #include <ktexteditor/document.h>
 #include <ktexteditor/view.h>
 
@@ -44,6 +46,7 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QToolButton>
+#include <QDialog>
 
 #include <kdeversion.h>
 
@@ -117,6 +120,11 @@ KateFileBrowser::KateFileBrowser(Kate::MainWindow *mainWindow,
 
   connect(m_dirOperator, SIGNAL(fileSelected(KFileItem)), this, SLOT(fileSelected(KFileItem)));
   connect(m_mainWindow, SIGNAL(viewChanged()), this, SLOT(autoSyncFolder()));
+
+  QAction* a = actionCollection()->addAction("katefilebrowser_show_controller");
+  a->setText(i18nc("@action", "Show Controller"));
+  a->setShortcut(QKeySequence(Qt::META + Qt::Key_G));
+  connect(a, SIGNAL(triggered()), this, SLOT(slotShowController()));
 }
 
 KateFileBrowser::~KateFileBrowser()
@@ -190,6 +198,16 @@ void KateFileBrowser::slotFilterChange(const QString & nf)
   }
 
   m_dirOperator->updateDir();
+}
+
+void KateFileBrowser::slotShowController() {
+  KateFileBrowserDialog dialog(mainWindow()->window(), this);
+  if (QDialog::Accepted == dialog.exec()) {
+    QString selection = dialog.m_inputLine->text();
+    KUrl newurl = dirOperator()->url();
+    newurl.cd(selection);
+    setDir(newurl);
+  }
 }
 
 bool kateFileSelectorIsReadable (const KUrl& url)
@@ -349,10 +367,6 @@ void KateFileBrowser::setupActions()
   // ktuan wants short-cut for this
   syncFolder->setShortcutContext(Qt::WindowShortcut);
   syncFolder->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Y));
-  m_dirOperator->actionCollection()->action("mkdir")
-    ->setShortcutContext(Qt::WindowShortcut);
-  m_dirOperator->actionCollection()->action("mkdir")
-    ->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_M));
 }
 //END Protected
 

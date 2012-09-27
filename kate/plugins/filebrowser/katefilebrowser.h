@@ -71,6 +71,7 @@ class KateFileBrowser : public KVBox
     void setDir(KUrl);
     void setDir( const QString& url ) { setDir( KUrl( url ) ); }
     void selectorViewChanged( QAbstractItemView * );
+    void slotShowController();
 
   private Q_SLOTS:
     void fileSelected(const KFileItem & /*file*/);
