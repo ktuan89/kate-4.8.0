@@ -18,6 +18,8 @@
 #include <QApplication>
 #include <QClipboard>
 #include <KDirOperator>
+#include <QRegExp>
+
 
 
 KateFileBrowserDialog::KateFileBrowserDialog(QWidget *parent, KateFileBrowser *browser):
@@ -69,19 +71,25 @@ bool KateFileBrowserDialog::eventFilter(QObject *obj, QEvent *event) {
         QKeyEvent *keyEvent=static_cast<QKeyEvent*>(event);
         kDebug(db_area) << keyEvent->key();
         if (keyEvent->key() == Qt::Key_Tab) {
-          QString res = "";
+          bool none = true;
+          QString res = "", last_name = "";
           QString cur = m_inputLine->text();
           m_fileslist->clear();
           foreach (const KFileItem& item, m_browser->dirOperator()->dirLister()->items()) {
             QString name = item.name();
             if (name.startsWith(cur)) {
               m_fileslist->addItem(new QListWidgetItem(name));
-              if (res == "") res = name;
+              if (item.isDir()) last_name = name;
+              if (none) { res = name; none = false; }
               else res = lcp(res, name);
             }
           }
           if (res != "" && res != cur) {
             m_inputLine->setText(res);
+          }
+          if (m_fileslist->count() == 1 && last_name != "") {
+            cdTo(last_name);
+            m_inputLine->setText("");
           }
           return true;
         } else if (keyEvent->key() == Qt::Key_QuoteLeft) {
@@ -89,6 +97,11 @@ bool KateFileBrowserDialog::eventFilter(QObject *obj, QEvent *event) {
           return true;
         } else if (keyEvent->key() == Qt::Key_Return || keyEvent->key() == Qt::Key_Apostrophe) {
           QString cur = m_inputLine->text();
+          if (cur.startsWith("/") || cur.startsWith("~")) {
+            m_browser->setDir(cur);
+            m_inputLine->setText("");
+            return true;
+          }
           foreach (const KFileItem& item, m_browser->dirOperator()->dirLister()->items()) {
             QString name = item.name();
             if (name == cur) {
@@ -109,7 +122,15 @@ bool KateFileBrowserDialog::eventFilter(QObject *obj, QEvent *event) {
         } else if (keyEvent->key() == Qt::Key_BracketLeft) {
           QString cur = m_inputLine->text();
           if (cur != "") {
-            m_browser->dirOperator()->mkdir(cur);
+            static const QRegExp file_name_reg("([a-z]|[0-9]|[A-Z]|_|-)+\\.[a-z]+$");
+            if (file_name_reg.exactMatch(cur)) {
+              m_browser->mainWindow()->openUrl(
+                KUrl(m_browser->dirOperator()->url().prettyUrl(KUrl::AddTrailingSlash) +
+                  cur)
+                                       );
+            } else {
+              m_browser->dirOperator()->mkdir(cur);
+            }
           }
           m_inputLine->setText("");
           return true;
