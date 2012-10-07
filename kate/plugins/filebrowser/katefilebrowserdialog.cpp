@@ -128,6 +128,8 @@ bool KateFileBrowserDialog::eventFilter(QObject *obj, QEvent *event) {
                 KUrl(m_browser->dirOperator()->url().prettyUrl(KUrl::AddTrailingSlash) +
                   cur)
                                        );
+              accept();
+              return true;
             } else {
               m_browser->dirOperator()->mkdir(cur);
             }
