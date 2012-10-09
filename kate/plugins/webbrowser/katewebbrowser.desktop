@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kate/Plugin
+X-KDE-Library=katewebbrowserplugin
+X-Kate-Version=2.9
+Name=Web Browser
+Comment=Browse the web

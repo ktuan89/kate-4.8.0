@@ -275,7 +275,7 @@ void KateConsole::runCommand(const QString & command) {
   } else if (command.startsWith("VIEW ")) {
     QString url = command.mid(5);
     QDesktopServices::openUrl(url);
-  } else {
+  } else if (!command.startsWith("WB")) {
     sendInput(command);
   }
 }

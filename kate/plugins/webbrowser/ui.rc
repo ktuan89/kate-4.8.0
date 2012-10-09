@@ -1,0 +1,7 @@
+<!DOCTYPE kpartgui>
+<gui name="katewebbrowser" library="libkatewebbrowserplugin" version="2">
+<MenuBar>
+ <Menu name="tools"><text>&amp;Tools</text>
+ </Menu>
+</MenuBar>
+</gui>
