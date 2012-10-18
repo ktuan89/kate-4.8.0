@@ -47,13 +47,12 @@ install(TARGETS kateinterfaces ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 set(kate_KDEINIT_SRCS katemain.cpp)
 
+kde4_add_app_icon(kate_KDEINIT_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../pics/hi*-app-kate.png")
+
 if (WIN32)
     configure_file(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/kate_dummy.cpp)
 
     list(APPEND kate_KDEINIT_SRCS ${CMAKE_CURRENT_BINARY_DIR}/kate_dummy.cpp)
-
-    #kde4_add_app_icon(kate_KDEINIT_SRCS "${KDE4_INSTALL_DIR}/share/icons/oxygen/*/apps/kate.png")
-    kde4_add_app_icon(kate_KDEINIT_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/../pics/hi*-app-kate.png")
 
     kde4_add_executable(kate ${kate_KDEINIT_SRCS} )
 

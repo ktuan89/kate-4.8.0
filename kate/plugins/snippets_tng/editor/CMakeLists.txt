@@ -16,7 +16,7 @@ include_directories("../lib/")
 
 kde4_add_ui_files(ktesnippets_editor_SRCS ${ktesnippets_editor_UI} )
 
-kde4_add_app_icon(ktesnippets_editor_SRCS "${KDE4_INSTALL_DIR}/share/icons/oxygen/*/apps/kate.png")
+# kde4_add_app_icon(ktesnippets_editor_SRCS "${KDE4_INSTALL_DIR}/share/icons/oxygen/*/apps/kate.png")
 
 kde4_add_executable(ktesnippets_editor ${ktesnippets_editor_SRCS})
 

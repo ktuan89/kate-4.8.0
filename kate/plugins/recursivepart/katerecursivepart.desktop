@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Kate/Plugin
+X-KDE-Library=katerecursivepartplugin
+X-Kate-Version=2.9
+Name=Recursive part
+Comment=Kate in kate
