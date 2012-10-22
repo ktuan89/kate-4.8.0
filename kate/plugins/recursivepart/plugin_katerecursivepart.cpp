@@ -84,6 +84,9 @@ KatePluginRecursivePartView::KatePluginRecursivePartView( Kate::MainWindow *main
   KTextEditor::View *view = m_part->activeView();
   connect(view, SIGNAL(focusIn(KTextEditor::View*)), this, SLOT(slotGetFocus(KTextEditor::View*)));
   connect(view, SIGNAL(focusOut(KTextEditor::View*)), this, SLOT(slotLostFocus(KTextEditor::View*)));
+
+  connect(this, SIGNAL(updateAlphaBetaMoveMode(bool)), view, SLOT(updateAlphaBetaMoveMode(bool)));
+  emit updateAlphaBetaMoveMode(true);
 }
 
 KatePluginRecursivePartView::~KatePluginRecursivePartView()

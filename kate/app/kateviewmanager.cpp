@@ -66,6 +66,7 @@ KateViewManager::KateViewManager (QWidget *parentW, KateMainWindow *parent)
     , m_mainWindow(parent)
     , m_blockViewCreationAndActivation (false)
     , m_activeViewRunning (false)
+    , m_kt_smartView (true)
 {
   // while init
   m_init = true;
@@ -614,6 +615,17 @@ KTextEditor::View *KateViewManager::activateView( KTextEditor::Document *d )
   // no doc with this id found
   if (!d)
     return activeView ();
+
+  // ktuan: if there are 2 viewspaces, switch to other viewspace, open old doc,
+  // switch back, open the new doc
+  if (m_kt_smartView && m_viewSpaceList.count() == 2 && m_viewSpaceList.first() == activeViewSpace()) {
+    KTextEditor::Document *old_doc = activeViewSpace()->currentView()->document();
+    KTextEditor::Cursor old_cursor = activeViewSpace()->currentView()->cursorPosition();
+    setActiveSpace(m_viewSpaceList.last());
+    activateView(old_doc);
+    activeViewSpace()->currentView()->setCursorPosition(old_cursor);
+    setActiveSpace(m_viewSpaceList.first());
+  }
 
   // activate existing view if possible
   if ( activeViewSpace()->showView(d) )

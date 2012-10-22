@@ -323,6 +323,10 @@ void KateMainWindow::setupActions()
   a->setText("AlphaBeta Move Mode");
   connect( a, SIGNAL(triggered()), this, SLOT(toggleAlphaBetaMoveMode()));
 
+  a = actionCollection()->addAction("ktuan_smart_view");
+  a->setText("KT smart view");
+  connect( a, SIGNAL(triggered()), this, SLOT(toggleKTSmartView()));
+
   KToggleAction* showFullScreenAction = KStandardAction::fullScreen( 0, 0, this, this);
   actionCollection()->addAction( showFullScreenAction->objectName(), showFullScreenAction );
   connect( showFullScreenAction, SIGNAL(toggled(bool)), this, SLOT(slotFullScreen(bool)));
@@ -594,6 +598,10 @@ void KateMainWindow::slotWindowActivated ()
 void KateMainWindow::toggleAlphaBetaMoveMode() {
   m_kt_betamovemode = !m_kt_betamovemode;
   emit signalUpdateAlphaBetaMoveMode(m_kt_betamovemode);
+}
+
+void KateMainWindow::toggleKTSmartView() {
+  m_viewManager->m_kt_smartView = !m_viewManager->m_kt_smartView;
 }
 
 void KateMainWindow::slotUpdateOpenWith()

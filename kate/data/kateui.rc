@@ -42,6 +42,7 @@
     <DefineGroup name="edit_find_merge" />
     <Separator />
     <Action name="view_alphabeta_move_mode" />
+    <Action name="ktuan_smart_view" />
   </Menu>
 
   <Menu name="view"><text>&amp;View</text>

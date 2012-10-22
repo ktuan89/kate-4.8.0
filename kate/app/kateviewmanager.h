@@ -294,6 +294,8 @@ class KateViewManager : public QSplitter
     bool m_activeViewRunning;
 
     int m_splitterIndex; // used during saving splitter config.
+public:
+  bool m_kt_smartView;
 };
 
 #endif

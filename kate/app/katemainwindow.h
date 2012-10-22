@@ -187,6 +187,7 @@ Q_SIGNALS:
   void signalUpdateAlphaBetaMoveMode(bool b);
 public Q_SLOTS:
   void toggleAlphaBetaMoveMode();
+  void toggleKTSmartView();
 
   private Q_SLOTS:
     void newWindow ();
