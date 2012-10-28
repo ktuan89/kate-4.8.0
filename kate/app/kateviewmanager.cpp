@@ -305,8 +305,6 @@ void KateViewManager::slotDocumentClose(KTextEditor::Document *document) {
     return;
   }
 
-  int db_area = KDebug::registerArea("ktuan-debug");
-  kDebug(db_area) << "close doc";
   // close document
   KateDocManager::self()->closeDocument (document);
 }
@@ -318,8 +316,6 @@ void KateViewManager::slotDocumentClose ()
   if (!activeView()) return;
 
   slotDocumentClose(activeView()->document());
-
-
 }
 
 KTextEditor::Document *KateViewManager::openUrl (const KUrl &url,
@@ -540,8 +536,6 @@ KTextEditor::View* KateViewManager::activeView ()
 
 void KateViewManager::setActiveSpace ( KateViewSpace* vs )
 {
-  int db_area = KDebug::registerArea("ktuan-debug");
-  kDebug(db_area) << "set active space " << m_viewSpaceList.indexOf(vs);
   if (activeViewSpace())
     activeViewSpace()->setActive( false );
 
@@ -561,11 +555,8 @@ void KateViewManager::activateSpace (KTextEditor::View* v)
   if (!v) return;
 
   KateViewSpace* vs = (KateViewSpace*)v->parentWidget()->parentWidget();
-  int db_area = KDebug::registerArea("ktuan-debug");
-  kDebug(db_area) << "activate space for view";
   if (!vs->isActiveSpace())
   {
-    kDebug(db_area) << "inside activate space for view";
     setActiveSpace (vs);
     activateView(v);
   }
@@ -622,29 +613,24 @@ KTextEditor::View *KateViewManager::activateView( KTextEditor::Document *d )
   if (!d)
     return activeView ();
 
-  int db_area = KDebug::registerArea("ktuan-debug");
-  kDebug(db_area) << "activateView " << d->documentName();
   // ktuan: if there are 2 viewspaces, switch to other viewspace, open old doc,
   // switch back, open the new doc
-  /*if (m_kt_smartView && m_viewSpaceList.count() == 2 && m_viewSpaceList.first() == activeViewSpace()) {
+  if (m_kt_smartView && m_viewSpaceList.count() == 2 && m_viewSpaceList.first() == activeViewSpace()) {
     KTextEditor::Document *old_doc = activeViewSpace()->currentView()->document();
     KTextEditor::Cursor old_cursor = activeViewSpace()->currentView()->cursorPosition();
     setActiveSpace(m_viewSpaceList.last());
     activateView(old_doc);
     activeViewSpace()->currentView()->setCursorPosition(old_cursor);
     setActiveSpace(m_viewSpaceList.first());
-  }*/
-  kDebug(db_area) << "finish switch activateView " << d->documentName();
+  }
 
   // activate existing view if possible
   if ( activeViewSpace()->showView(d) )
   {
-    kDebug(db_area) << "come here";
     activateView( activeViewSpace()->currentView() );
     return activeView ();
   }
 
-  kDebug(db_area) << "create new one";
   // create new view otherwise
   createView (d);
   return activeView ();

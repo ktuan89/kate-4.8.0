@@ -279,9 +279,9 @@ class KateHlRegExpr : public KateHlItem
     KateHlRegExpr(int attribute, KateHlContextModification context,signed char regionId,signed char regionId2 ,const QString &expr, bool insensitive, bool minimal);
 
     virtual int checkHgl(const QString& text, int offset, int len);
-    
+
     virtual void capturedTexts (QStringList &);
-    
+
     virtual KateHlItem *clone(const QStringList *args);
 
   private:
@@ -295,7 +295,7 @@ class KateHlRegExpr : public KateHlItem
     int _lastOffset;
     /// length of the last match
     int _lastOffsetLength;
-    
+
     QRegExp Expr;
 };
 

@@ -206,7 +206,7 @@ class KateSchemaConfigFontColorTab : public QWidget
     void importDefaults(const QString& schemaName, int schema, KConfig *cfg);
   private:
     KateStyleTreeWidget* m_defaultStyles;
-    QHash<int,KateAttributeList*> m_defaultStyleLists;    
+    QHash<int,KateAttributeList*> m_defaultStyleLists;
 };
 
 class KateSchemaConfigHighlightTab : public QWidget
@@ -223,13 +223,13 @@ class KateSchemaConfigHighlightTab : public QWidget
 
   Q_SIGNALS:
     void changed();
-    
+
   protected Q_SLOTS:
     void hlChanged(int z);
   public Q_SLOTS:
     void exportHl(int schema=-1,int hl=-1,KConfig* cfg=0);
     void importHl(const QString& fromSchemaName=QString(), int schema=-1, int hl=-1, KConfig *cfg=0);
-        
+
   private:
     KateSchemaConfigFontColorTab *m_defaults;
 

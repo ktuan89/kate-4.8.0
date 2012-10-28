@@ -360,7 +360,7 @@ class KTEXTEDITOR_EXPORT MarkInterface
                                KTextEditor::MarkInterface::MarkChangeAction action) = 0;
 
     Q_SIGNALS:
-      
+
     /**
      * The \p document emits this signal whenever the \p mark is hovered using the mouse,
      * and the receiver may show a tooltip.
@@ -371,7 +371,7 @@ class KTEXTEDITOR_EXPORT MarkInterface
      */
     void markToolTipRequested ( KTextEditor::Document* document, KTextEditor::Mark mark,
                                QPoint position, bool& handled );
-    
+
     /**
      * The \p document emits this signal whenever the \p mark is right-clicked to show a context menu.
      * The receiver may show an own context menu instead of the kate internal one.
@@ -383,7 +383,7 @@ class KTEXTEDITOR_EXPORT MarkInterface
     void markContextMenuRequested( KTextEditor::Document* document, KTextEditor::Mark mark,
                                QPoint pos, bool& handled );
 
-    
+
     /**
      * The \p document emits this signal whenever the \p mark is left-clicked.
      * \param document the document which emitted the signal

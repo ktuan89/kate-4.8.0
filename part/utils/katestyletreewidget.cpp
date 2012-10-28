@@ -133,7 +133,7 @@ KateStyleTreeWidget::KateStyleTreeWidget( QWidget *parent, bool showUseDefaults 
   if(showUseDefaults) {
     headers << i18n("Use Default Style");
   }
-  
+
   setHeaderLabels(headers);
 
   headerItem()->setIcon(1, KIcon("format-text-bold"));
@@ -169,7 +169,7 @@ bool KateStyleTreeWidget::edit( const QModelIndex & index, EditTrigger trigger, 
 {
   if(index.column() == KateStyleTreeWidgetItem::Context)
     return false;
-  
+
   KateStyleTreeWidgetItem *i = dynamic_cast<KateStyleTreeWidgetItem*>(itemFromIndex(index));
   if (!i)
     return QTreeWidget::edit(index, trigger, event);
@@ -296,13 +296,13 @@ void KateStyleTreeWidget::updateGroupHeadings()
   for(int i = 0; i < topLevelItemCount(); i++) {
     QTreeWidgetItem* currentTopLevelItem = topLevelItem(i);
     QTreeWidgetItem* firstChild = currentTopLevelItem->child(0);
-    
+
     if(firstChild) {
       QColor foregroundColor = firstChild->data(KateStyleTreeWidgetItem::Foreground, Qt::DisplayRole).value<QColor>();
       QColor backgroundColor = firstChild->data(KateStyleTreeWidgetItem::Background, Qt::DisplayRole).value<QColor>();
-      
+
       currentTopLevelItem->setForeground(KateStyleTreeWidgetItem::Context, foregroundColor);
-      
+
       if(backgroundColor.isValid()) {
         currentTopLevelItem->setBackground(KateStyleTreeWidgetItem::Context, backgroundColor);
       }
@@ -364,10 +364,10 @@ void KateStyleTreeDelegate::paint( QPainter* painter, const QStyleOptionViewItem
     if(brush != QBrush()) {
       styleContextItem.palette.setBrush(QPalette::HighlightedText, brush);
     }
-	
+
     return QStyledItemDelegate::paint(painter, styleContextItem, index);
   }
-  
+
   if (!columns.contains(index.column())) {
     return QStyledItemDelegate::paint(painter, option, index);
   }
@@ -388,11 +388,11 @@ void KateStyleTreeDelegate::paint( QPainter* painter, const QStyleOptionViewItem
     opt.text = i18nc("No text or background color set", "None set");
     brush = Qt::white;
   }
-  
+
   if(index.row() == m_widget->currentIndex().row() && m_widget->currentItem()->isSelected() && m_widget->currentItem()->childCount() == 0) {
     painter->fillRect(opt.rect, KColorScheme(QPalette::Active, KColorScheme::Selection).background());
   }
-  
+
   m_widget->style()->drawControl(QStyle::CE_PushButton, &opt, painter, m_widget);
 
   if (set)
@@ -610,7 +610,7 @@ void KateStyleTreeWidgetItem::toggleDefStyle()
   else {
     currentStyle = KTextEditor::Attribute::Ptr(new KTextEditor::Attribute( *defaultStyle ));
     updateStyle();
-    
+
     QModelIndex currentIndex = treeWidget()->currentIndex();
     while(currentIndex.isValid()) {
         treeWidget()->update(currentIndex);

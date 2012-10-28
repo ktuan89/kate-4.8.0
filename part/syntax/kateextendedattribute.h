@@ -53,7 +53,7 @@ class KateExtendedAttribute : public KTextEditor::Attribute
     bool isDefaultStyle() const;
     int defaultStyleIndex() const;
     void setDefaultStyleIndex(int index);
-    
+
     bool performSpellchecking() const;
     void setPerformSpellchecking(bool spellchecking);
 };

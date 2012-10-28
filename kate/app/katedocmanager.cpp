@@ -296,12 +296,9 @@ bool KateDocManager::closeDocument(class KTextEditor::Document *doc, bool closeU
 
   saveMetaInfos(doc);
   if (closeUrl && !doc->closeUrl()) return false;
-  int db_area = KDebug::registerArea("ktuan-debug");
-  kDebug(db_area) << "here 1";
   for (int i = 0; i < KateApp::self()->mainWindows (); i++ )
     KateApp::self()->mainWindow(i)->viewManager()->closeViews(doc);
 
-  kDebug(db_area) << "here 2";
   if ( closeUrl && m_tempFiles.contains( doc ) )
   {
     QFileInfo fi( m_tempFiles[ doc ].first.toLocalFile() );
@@ -322,13 +319,10 @@ bool KateDocManager::closeDocument(class KTextEditor::Document *doc, bool closeU
     }
   }
 
-  kDebug(db_area) << "here 3";
   deleteDoc (doc);
-kDebug(db_area) << "here 4";
   // never ever empty the whole document list
   if (m_docList.isEmpty())
     createDoc ();
-kDebug(db_area) << "here 5";
   return true;
 }
 
