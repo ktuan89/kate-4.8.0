@@ -293,7 +293,7 @@ class KATEPART_TESTS_EXPORT KateCodeFoldingTree : public QObject
       }
       m_kt_tobeDeleted.clear();
     }
-  
+
     KateCodeFoldingTree (KateBuffer *buffer);
     ~KateCodeFoldingTree ();
 

@@ -64,11 +64,16 @@ KateRenderer::KateRenderer(KateDocument* doc, KateView *view)
     , m_config(new KateRendererConfig(this))
 {
   updateAttributes ();
+  QString s = "";
+  for (int i = 0; i < 100; ++i) {
+    m_widthOf[i] = config()->fontMetrics().width(s);
+    s.append('x');
+  }
   /*int db_area = KDebug::registerArea("ktuan-debug");
-  kDebug(db_area) << "set font here";
-  QFont f ( config()->font () );
-  f.setStyleStrategy(QFont::NoAntialias);
-  config()->setFont(f);*/
+  kDebug(db_area) << "space width: " << config()->fontMetrics().width(spaceChar);
+  kDebug(db_area) << "x width: " << config()->fontMetrics().width('x');
+  kDebug(db_area) << "O width: " << config()->fontMetrics().width('O');
+  kDebug(db_area) << "hahahehe width: " << config()->fontMetrics().width("hahahehe");*/
 }
 
 KateRenderer::~KateRenderer()
@@ -689,7 +694,7 @@ void KateRenderer::paintTextLine(QPainter& paint, KateLineLayoutPtr range, int x
 
         for (int x = m_indentWidth; x < lastIndentColumn; x += m_indentWidth)
         {
-          paintIndentMarker(paint, x * w + 1 - xStart, range->line());
+          paintIndentMarker(paint, (x < 100 ? m_widthOf[x] : (x * w)) + 1 - xStart, range->line());
         }
       }
 
@@ -831,7 +836,10 @@ void KateRenderer::paintTextLine(QPainter& paint, KateLineLayoutPtr range, int x
   {
     paint.setRenderHint(QPainter::Antialiasing, false);
     paint.setPen( config()->wordWrapMarkerColor() );
-    int _x = m_doc->config()->wordWrapAt() * fm.width('x') - xStart;
+
+    int char_pos = m_doc->config()->wordWrapAt();
+    int _x = char_pos < 100 ? m_widthOf[char_pos] : (char_pos * spaceWidth());
+    _x -= xStart;
     paint.drawLine( _x,0,_x,lineHeight() );
   }
 
@@ -840,11 +848,7 @@ void KateRenderer::paintTextLine(QPainter& paint, KateLineLayoutPtr range, int x
 
 const QFont& KateRenderer::currentFont() const
 {
-  // KTUAN
   return config()->font();
-  // QFont f ( config()->font () );
-  // f.setStyleStrategy(QFont::NoAntialias);
-  // return f;
 }
 
 const QFontMetrics& KateRenderer::currentFontMetrics() const
