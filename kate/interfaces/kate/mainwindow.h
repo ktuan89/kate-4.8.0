@@ -169,6 +169,9 @@ namespace Kate
        * add/remove and manipulate the toolview of this main windows
        */
     public:
+      void runCommand(const QString &command) {
+        emit signalRunCommand(command);
+      }
       /**
        * Toolview position.
        * A toolview can only be at one side at a time.

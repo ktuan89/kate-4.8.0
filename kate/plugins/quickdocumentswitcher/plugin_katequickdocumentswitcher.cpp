@@ -84,7 +84,7 @@ PluginViewKateQuickDocumentSwitcher::~PluginViewKateQuickDocumentSwitcher() {
 }
 
 void PluginViewKateQuickDocumentSwitcher::slotQuickSwitch() {
-    KTextEditor::Document *doc=PluginViewKateQuickDocumentSwitcherDialog::document(mainWindow()->window(), m_prevDoc);
+    KTextEditor::Document *doc=PluginViewKateQuickDocumentSwitcherDialog::document(mainWindow(), mainWindow()->window(), m_prevDoc);
     if (doc) {
         // before switching save current document as alternate one so it
         // would be preselected on a next switch for convenience
@@ -98,8 +98,8 @@ void PluginViewKateQuickDocumentSwitcher::slotQuickSwitch() {
 //END: View
 
 //BEGIN: Dialog
-KTextEditor::Document *PluginViewKateQuickDocumentSwitcherDialog::document(QWidget *parent, KTextEditor::Document* docToSelect) {
-    PluginViewKateQuickDocumentSwitcherDialog dlg(parent, docToSelect);
+KTextEditor::Document *PluginViewKateQuickDocumentSwitcherDialog::document(Kate::MainWindow *mainwindow, QWidget *parent, KTextEditor::Document* docToSelect) {
+    PluginViewKateQuickDocumentSwitcherDialog dlg(mainwindow, parent, docToSelect);
     if (QDialog::Accepted==dlg.exec()) {
         // document ptr is held in the (row,0) , while item at (row, 1) might be selected,
         // we need to obtain an index in (row,0)
@@ -114,8 +114,10 @@ KTextEditor::Document *PluginViewKateQuickDocumentSwitcherDialog::document(QWidg
     return 0;
 }
 
-PluginViewKateQuickDocumentSwitcherDialog::PluginViewKateQuickDocumentSwitcherDialog(QWidget *parent, KTextEditor::Document* docToSelect):
-    KDialog(parent) {
+PluginViewKateQuickDocumentSwitcherDialog::PluginViewKateQuickDocumentSwitcherDialog(Kate::MainWindow *mainwindow, QWidget *parent, KTextEditor::Document* docToSelect):
+    KDialog(parent),
+    m_mainWindow(mainwindow) {
+
     setModal(true);
 
     setButtons( KDialog::Ok | KDialog::Cancel);
@@ -220,6 +222,14 @@ bool PluginViewKateQuickDocumentSwitcherDialog::eventFilter(QObject *obj, QEvent
             if ( (keyEvent->key()==Qt::Key_Up) || (keyEvent->key()==Qt::Key_Down) || (keyEvent->key()==Qt::Key_PageUp) || (keyEvent->key()==Qt::Key_PageDown) ) {
                 QCoreApplication::sendEvent(m_listView,event);
                 return true;
+            }
+            if (keyEvent->key() == Qt::Key_Tab) {
+              if (m_inputLine->text() == "") {
+                m_mainWindow->runCommand("cat ~/www/.git/COMMIT_EDITMSG\n");
+              } else {
+                m_mainWindow->runCommand("tbgs " + m_inputLine->text() + "\n");
+              }
+              return true;
             }
         } else {
             if ( (keyEvent->key()!=Qt::Key_Up) && (keyEvent->key()!=Qt::Key_Down) && (keyEvent->key()!=Qt::Key_Tab) && (keyEvent->key()!=Qt::Key_Backtab) && (keyEvent->key()!=Qt::Key_PageUp) && (keyEvent->key()!=Qt::Key_PageDown)) {

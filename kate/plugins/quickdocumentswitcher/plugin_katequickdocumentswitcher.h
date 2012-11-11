@@ -60,9 +60,9 @@ class PluginViewKateQuickDocumentSwitcher: public Kate::PluginView, public Kate:
 class PluginViewKateQuickDocumentSwitcherDialog: public KDialog {
     Q_OBJECT
     public:
-        PluginViewKateQuickDocumentSwitcherDialog(QWidget *parent, KTextEditor::Document* docToSelect = 0);
+        PluginViewKateQuickDocumentSwitcherDialog(Kate::MainWindow *mainwindow, QWidget *parent, KTextEditor::Document* docToSelect = 0);
         virtual ~PluginViewKateQuickDocumentSwitcherDialog();
-        static KTextEditor::Document *document(QWidget *parent, KTextEditor::Document* docToSelect = 0);
+        static KTextEditor::Document *document(Kate::MainWindow *mainwindow, QWidget *parent, KTextEditor::Document* docToSelect = 0);
     protected:
         bool eventFilter(QObject *obj, QEvent *event);
     private Q_SLOTS:
@@ -71,6 +71,7 @@ class PluginViewKateQuickDocumentSwitcherDialog: public KDialog {
         QSortFilterProxyModel *m_model;
         QTreeView *m_listView;
         KLineEdit *m_inputLine;
+        Kate::MainWindow *m_mainWindow;
 };
 
 

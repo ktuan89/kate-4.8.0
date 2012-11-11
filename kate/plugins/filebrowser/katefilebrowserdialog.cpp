@@ -66,10 +66,8 @@ void KateFileBrowserDialog::cdTo(QString relative_path) {
 }
 
 bool KateFileBrowserDialog::eventFilter(QObject *obj, QEvent *event) {
-    int db_area = KDebug::registerArea("ktuan-debug");
     if (event->type()==QEvent::KeyPress) {
         QKeyEvent *keyEvent=static_cast<QKeyEvent*>(event);
-        kDebug(db_area) << keyEvent->key();
         if (keyEvent->key() == Qt::Key_Tab) {
           bool none = true;
           QString res = "", last_name = "";
@@ -82,6 +80,17 @@ bool KateFileBrowserDialog::eventFilter(QObject *obj, QEvent *event) {
               if (item.isDir()) last_name = name;
               if (none) { res = name; none = false; }
               else res = lcp(res, name);
+            }
+          }
+          if (res == "") {
+            foreach (const KFileItem& item, m_browser->dirOperator()->dirLister()->items()) {
+              QString name = item.name();
+              if (name.toLower().startsWith(cur.toLower())) {
+                m_fileslist->addItem(new QListWidgetItem(name));
+                if (item.isDir()) last_name = name;
+                if (none) { res = name; none = false; }
+                else res = lcp(res, name);
+              }
             }
           }
           if (res != "" && res != cur) {
