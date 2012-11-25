@@ -86,7 +86,7 @@ QVariant KateNewCompletionModel::data(const QModelIndex& index, int role) const
     switch ( role )
     {
       case Qt::DisplayRole:
-        return i18n("Auto New");
+        return i18n("Customized Completion");
       case GroupRole:
         return Qt::DisplayRole;
     }
@@ -148,7 +148,7 @@ bool KateNewCompletionModel::shouldStartCompletion(KTextEditor::View* view, cons
     KateView *v = qobject_cast<KateView*> (view);
 
     QString text = view->document()->line(position.line()).left(position.column());
-    static const QRegExp ktuan_new_class("(new +\\w*)$");
+    static const QRegExp ktuan_new_class("((new \\w*)|(gen\\w*)|(get\\w*))$");
     if (ktuan_new_class.indexIn(text) >= 0) return true;
     return false;
 }
@@ -158,8 +158,8 @@ bool KateNewCompletionModel::shouldAbortCompletion(KTextEditor::View* view, cons
     if (m_automatic) {
       if (currentCompletion.length()<3) return true;
     }
-    static const QRegExp ktuan_new_class("(new +\\w*)$");
-    return !ktuan_new_class.exactMatch(currentCompletion);// &&
+    static const QRegExp ktuan_new_class("((new \\w*)|(gen\\w*)|(get\\w*))$");
+    return !ktuan_new_class.exactMatch(currentCompletion);
     // return CodeCompletionModelControllerInterface4::shouldAbortCompletion(view,range,currentCompletion);
 }
 
@@ -216,9 +216,40 @@ const QStringList KateNewCompletionModel::allMatches( KTextEditor::View *view, c
           {
             m = class_rek.cap( 1 );
             if ( ! seen.contains( m ) && m.startsWith(class_name)) {
-              m = "new " + m;
               seen.insert( m );
+              m = "new " + m;
               l << m;
+            }
+          }
+          pos += class_rek.matchedLength();
+        }
+      }
+    }
+  }
+
+  int db_area = KDebug::registerArea("ktuan-debug");
+  // convert yieldXXX and Ent::load('XXX') to genXXX and getXXX
+  if (match_str.startsWith("gen") || match_str.startsWith("get")) {
+    kDebug(db_area) << "have gen or get";
+    QString x = match_str.mid(3);
+    class_rek = QRegExp("(yield|Ent::load\\(\\\'|Ent::load\\(\\\")([A-Z]\\w*)");
+    for (i = 0; i < doc->lines(); ++i) {
+      QString s = doc->line(i);
+      QString m;
+      pos = 0;
+      while (pos >= 0) {
+        pos = class_rek.indexIn(s, pos);
+        if ( pos >= 0 )
+        {
+          // typing in the middle of a word
+          if ( ! ( i == range.start().line() && pos >= range.start().column() && pos <= range.end().column()) )
+          {
+            m = class_rek.cap( 2 );
+            kDebug(db_area) << "found " << m;
+            if ( ! seen.contains( m ) && m.startsWith(x)) {
+              seen.insert( m );
+              l << ("gen" + m);
+              l << ("get" + m);
             }
           }
           pos += class_rek.matchedLength();
@@ -251,11 +282,14 @@ KTextEditor::Range KateNewCompletionModel::completionRange(KTextEditor::View* vi
   KTextEditor::Document *doc = view->document();
 
   // ktuan java case: new List<Integer>
+  // yieldXXX, Ent::load('XXX, genXXX, getXXX
   {
     QString text = view->document()->line(position.line()).left(position.column());
-    const static QRegExp ktuan_new_class("(new +\\w*)$");
+    const static QRegExp ktuan_new_class("((new \\w*)|(gen\\w*)|(get\\w*))$");
     int pos = ktuan_new_class.indexIn(text);
     if (pos >= 0) {
+      int db_area = KDebug::registerArea("ktuan-debug");
+      kDebug(db_area) << "Here start completion";
       return KTextEditor::Range( KTextEditor::Cursor( line, pos ), position );
     }
   }
