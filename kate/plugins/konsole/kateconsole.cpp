@@ -145,6 +145,7 @@ KateConsole::KateConsole (KateKonsolePlugin* plugin, Kate::MainWindow *mw, QWidg
     , m_toolView (parent)
     , m_plugin(plugin)
     , m_kt_open_immediately(false)
+    , m_kt_comm_temp("tbgs ###")
 {
   QAction* a = actionCollection()->addAction("katekonsole_tools_pipe_to_terminal");
   a->setIcon(KIcon("utilities-terminal"));
@@ -275,6 +276,8 @@ void KateConsole::runCommand(const QString & command) {
   } else if (command.startsWith("VIEW ")) {
     QString url = command.mid(5);
     QDesktopServices::openUrl(url);
+  } else if (command.startsWith("SC ")) {
+    m_kt_comm_temp = command.mid(3);
   } else if (!command.startsWith("WB")) {
     sendInput(command);
   }
@@ -284,7 +287,8 @@ void KateConsole::receiveLine(const QString & line) {
   // ktuan
   // int db_area = KDebug::registerArea("ktuan-debug");
   // kDebug(db_area) << "\'" << line << "\'";
-  if (line.startsWith("www")) {
+  if (line.startsWith("www") || line.startsWith("fbcode") ||
+      line.startsWith("dataswarm") || line.startsWith("source")) {
     if (m_kt_open_immediately) {
       QString filename = line;
       int i = filename.indexOf(":");
@@ -299,12 +303,6 @@ void KateConsole::receiveLine(const QString & line) {
   } else if (line.startsWith("KTENDEND")) {
     m_kt_open_immediately = false;
   } else {
-    /*int i = line.indexOf("modified:");
-    if (i != -1) {
-      for (int j = 0; j < line.length(); ++j) {
-        kDebug(db_area) << line.at(j) << " " << (int) line.at(j).toAscii();
-      }
-    } */
     if (line.startsWith("#\tmodified:   ") ||
         line.startsWith("#\tnew file:   ")
     ) {
@@ -315,7 +313,8 @@ void KateConsole::receiveLine(const QString & line) {
 
 void KateConsole::slotPickFile() {
   QString filename = PluginKonsoleDialog::document(mainWindow()->window(), m_searchList, this);
-  if (filename.startsWith("www")) {
+  if (filename.startsWith("www") || filename.startsWith("fbcode") ||
+      filename.startsWith("dataswarm") || filename.startsWith("source")) {
     int i = filename.indexOf(":");
     if (i != -1) {
       filename = filename.mid(0, i);
@@ -517,7 +516,9 @@ bool PluginKonsoleDialog::eventFilter(QObject *obj, QEvent *event) {
               if (m_inputLine->text() == "") {
                 m_console->sendInput("cat ~/www/.git/COMMIT_EDITMSG\n");
               } else {
-                m_console->sendInput("tbgs " + m_inputLine->text() + "\n");
+                QString s = m_console->m_kt_comm_temp;
+                s.replace("###", m_inputLine->text());
+                m_console->sendInput(s + "\n");
               }
               return true;
             }
