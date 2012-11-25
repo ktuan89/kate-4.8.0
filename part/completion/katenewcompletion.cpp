@@ -227,10 +227,8 @@ const QStringList KateNewCompletionModel::allMatches( KTextEditor::View *view, c
     }
   }
 
-  int db_area = KDebug::registerArea("ktuan-debug");
   // convert yieldXXX and Ent::load('XXX') to genXXX and getXXX
   if (match_str.startsWith("gen") || match_str.startsWith("get")) {
-    kDebug(db_area) << "have gen or get";
     QString x = match_str.mid(3);
     class_rek = QRegExp("(yield|Ent::load\\(\\\'|Ent::load\\(\\\")([A-Z]\\w*)");
     for (i = 0; i < doc->lines(); ++i) {
@@ -245,7 +243,6 @@ const QStringList KateNewCompletionModel::allMatches( KTextEditor::View *view, c
           if ( ! ( i == range.start().line() && pos >= range.start().column() && pos <= range.end().column()) )
           {
             m = class_rek.cap( 2 );
-            kDebug(db_area) << "found " << m;
             if ( ! seen.contains( m ) && m.startsWith(x)) {
               seen.insert( m );
               l << ("gen" + m);
@@ -288,8 +285,6 @@ KTextEditor::Range KateNewCompletionModel::completionRange(KTextEditor::View* vi
     const static QRegExp ktuan_new_class("((new \\w*)|(gen\\w*)|(get\\w*))$");
     int pos = ktuan_new_class.indexIn(text);
     if (pos >= 0) {
-      int db_area = KDebug::registerArea("ktuan-debug");
-      kDebug(db_area) << "Here start completion";
       return KTextEditor::Range( KTextEditor::Cursor( line, pos ), position );
     }
   }
