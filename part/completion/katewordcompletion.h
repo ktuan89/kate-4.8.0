@@ -33,6 +33,9 @@
 #include <QtCore/QEvent>
 #include <QtCore/QObject>
 #include <QtCore/QList>
+#include <QTime>
+#include <QMap>
+#include <KUrl>
 
 #include <kdebug.h>
 
@@ -79,9 +82,16 @@ class KateWordCompletionModel : public KTextEditor::CodeCompletionModel, public 
 
     const QStringList allMatches( KTextEditor::View *view, const KTextEditor::Range &range ) const;
 
+  public Q_SLOTS:
+    void processView(KTextEditor::View *view);
+    void processDoc(KTextEditor::Document *doc);
+
   private:
     QStringList m_matches;
     bool m_automatic;
+    QMap<QString, QTime> m_times;
+    QMap<QString, QStringList> doc_word_list;
+    QStringList doc_list;
 };
 
 class KateWordCompletionView : public QObject

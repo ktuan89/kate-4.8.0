@@ -233,7 +233,74 @@ const QStringList KateWordCompletionModel::allMatches( KTextEditor::View *view, 
       }
     i++;
   }
+
+  // Global completion
+  // int db_area = KDebug::registerArea("ktuan-debug");
+  QMap<QString, QStringList>::const_iterator ci = doc_word_list.constBegin();
+  while (ci != doc_word_list.constEnd()) {
+  if (ci.key() != doc->url().prettyUrl()) {
+    QStringList list = ci.value();
+    foreach (QString word, list) {
+      // kDebug(db_area) << "complete word " << word;
+      if (word.startsWith(match_str) && !seen.contains(word)) {
+        // kDebug(db_area) << "Global completion";
+        seen.insert(word);
+        l << word;
+      }
+    }
+  }
+  ++ci;
+  }
+
   return l;
+}
+
+void KateWordCompletionModel::processView(KTextEditor::View *view) {
+  processDoc(view->document());
+}
+
+void KateWordCompletionModel::processDoc(KTextEditor::Document *doc)
+{
+  QString doc_name = doc->url().prettyUrl();
+  // performance aware: only run this method at most once every 3 seconds per doc
+  /*if (!m_times.contains(doc_name)) {
+    m_times[doc_name] = QTime();
+  }
+  if (!m_times[doc_name].isNull() && m_times[doc_name].elapsed() < 3000) {
+    return;
+  }
+  m_times[doc_name].start();*/
+
+  // int db_area = KDebug::registerArea("ktuan-debug");
+  // kDebug(db_area) << "Run processView";
+
+  QStringList word_list;
+  QSet<QString> seen;
+  for (int i = 0; i < doc->lines(); ++i) {
+    QString s = doc->line(i);
+    QString word="";
+    for (int j = 0; j <= s.length(); ++j) {
+      QChar c = (j == s.length()) ? ' ' : s.at(j);
+      if (c.isLetterOrNumber() || c == '_') {
+        word.append(c);
+      } else {
+        if (word != "" && !seen.contains(word)) {
+          // kDebug(db_area) << "add word " << word;
+          word_list << word;
+          seen.insert(word);
+        }
+        word="";
+      }
+    }
+  }
+
+  doc_word_list[doc_name] = word_list;
+  doc_list.removeAll(doc_name);
+  doc_list.append(doc_name);
+  if (doc_word_list.count() > 30) {
+    doc_word_list.remove(doc_list.first());
+    doc_list.pop_front();
+  }
 }
 
 KTextEditor::CodeCompletionModelControllerInterface3::MatchReaction KateWordCompletionModel::matchingItem(const QModelIndex& /*matched*/)

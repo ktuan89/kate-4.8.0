@@ -1648,8 +1648,20 @@ void KateView::updateConfig ()
 
   // register/unregister word completion...
   unregisterCompletionModel (KateGlobal::self()->wordCompletionModel());
-  if (config()->wordCompletion ())
+  if (config()->wordCompletion ()) {
     registerCompletionModel (KateGlobal::self()->wordCompletionModel());
+    // load all words of a doc everytime a view is created
+    KateGlobal::self()->wordCompletionModel()->processDoc(this->doc());
+    /*connect(
+      this->doc(), SIGNAL(textChanged(KTextEditor::Document *)),
+      KateGlobal::self()->wordCompletionModel(), SLOT(processView(KTextEditor::Document *)),
+      Qt::UniqueConnection
+    );*/
+    connect(this, SIGNAL(focusOut(KTextEditor::View *)),
+      KateGlobal::self()->wordCompletionModel(), SLOT(processView(KTextEditor::View *)),
+      Qt::UniqueConnection
+    );
+  }
 
   unregisterCompletionModel (KateGlobal::self()->newCompletionModel());
   registerCompletionModel (KateGlobal::self()->newCompletionModel());
