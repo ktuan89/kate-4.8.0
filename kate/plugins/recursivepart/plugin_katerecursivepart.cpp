@@ -38,6 +38,7 @@
 
 #include <QUrl>
 #include <QStringList>
+#include <QTimer>
 
 #include <algorithm>
 #include <cmath>
@@ -93,6 +94,12 @@ KatePluginRecursivePartView::KatePluginRecursivePartView( Kate::MainWindow *main
     mainWin, SIGNAL(signalRunCommand(const QString &)),
     this, SLOT(runCommand(const QString &))
   );
+
+  QTimer *timer = new QTimer(this);
+  connect(timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
+  timer->setSingleShot(false);
+  timer->setInterval(4222);
+  timer->start();
 }
 
 KatePluginRecursivePartView::~KatePluginRecursivePartView()
@@ -107,13 +114,14 @@ void KatePluginRecursivePartView::runCommand(const QString &command) {
     m_part->activeView()->document()->setText(command.mid(7));
   }
   else if (command.startsWith("RP get")) {
-    // TODO
-    /*KTextEditor::Command *p = KateCmd::self()->queryCommand ("recursivePartGetText");
-    QString msg;
     QString content = m_part->activeView()->document()->text();
     content.replace("\n", "~");
-    p->exec (m_part->activeView(), "recursivePartGetText \'" + content + "\'", msg);*/
+    mainWindow()->runJSCommand("recursivePartGetText \'" + content + "\'");
   }
+}
+
+void KatePluginRecursivePartView::slotTimeout() {
+  mainWindow()->runJSCommand("recursivePartTimeout");
 }
 
 void KatePluginRecursivePartView::slotGetFocus(KTextEditor::View *view) {

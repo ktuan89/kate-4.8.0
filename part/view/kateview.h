@@ -220,6 +220,9 @@ class KATEPART_TESTS_EXPORT KateView : public KTextEditor::View,
     void signalRunCommand(const QString & command);
     void needTextHint(const KTextEditor::Cursor& position, QString &text);
 
+  public Q_SLOTS:
+    void runJSCommand(const QString & command);
+
   public:
     void runCommand(const QString & command) {
       emit signalRunCommand(command);

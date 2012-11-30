@@ -577,6 +577,9 @@ void KateMainWindow::slotWindowActivated ()
       connect(m_viewManager->activeView(), SIGNAL(signalRunCommand(const QString &)),
           m_mainWindow, SIGNAL(signalRunCommand(const QString &)), Qt::UniqueConnection);
 
+      connect(m_mainWindow, SIGNAL(signalRunJSCommand(const QString &)),
+        m_viewManager->activeView(), SLOT(runJSCommand(const QString &)), Qt::UniqueConnection);
+
       connect(m_viewManager->activeView(), SIGNAL(signalToggleAlphaBetaMoveMode()),
           this, SLOT(toggleAlphaBetaMoveMode()), Qt::UniqueConnection);
 

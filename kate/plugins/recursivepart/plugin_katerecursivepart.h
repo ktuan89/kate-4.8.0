@@ -77,6 +77,7 @@ public slots:
   void slotGetFocus(KTextEditor::View*);
   void slotLostFocus(KTextEditor::View*);
   void runCommand(const QString &);
+  void slotTimeout();
 signals:
   void updateAlphaBetaMoveMode(bool b);
 };

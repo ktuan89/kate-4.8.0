@@ -152,6 +152,7 @@ namespace Kate
 #endif
 
       void signalRunCommand(const QString & command);
+      void signalRunJSCommand(const QString & command);
       /**
        * This signal is emitted whenever the active view changes.
        */
@@ -171,6 +172,9 @@ namespace Kate
     public:
       void runCommand(const QString &command) {
         emit signalRunCommand(command);
+      }
+      void runJSCommand(const QString &command) {
+        emit signalRunJSCommand(command);
       }
       /**
        * Toolview position.

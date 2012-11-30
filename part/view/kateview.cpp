@@ -62,6 +62,7 @@
 #include "kateswapfile.h"
 #include "katerecoverbar.h"
 #include "katebrokenswapfilebar.h"
+#include "katecmd.h"
 
 #include <kparts/event.h>
 
@@ -3061,6 +3062,16 @@ void KateView::hideBrokenSwapFileBar()
     topViewBar()->removeBarWidget(m_brokenSwapFileBar);
     delete m_brokenSwapFileBar;
     m_brokenSwapFileBar = 0;
+  }
+}
+
+void KateView::runJSCommand(const QString & command) {
+  KTextEditor::Command *p = KateCmd::self()->queryCommand (command);
+  if (p) {
+    QString msg;
+    p->exec (this, command, msg);
+    int db_area = KDebug::registerArea("ktuan-debug");
+    kDebug(db_area) << msg;
   }
 }
 
