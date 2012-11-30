@@ -291,6 +291,7 @@ public Q_SLOTS:
     KateContainerStackedLayout *m_topContainerStack;
 
     bool m_kt_betamovemode;
+    KTextEditor::View *m_kt_last_active_view;
 
     class BarState{
       public:

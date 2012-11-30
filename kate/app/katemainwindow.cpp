@@ -107,6 +107,7 @@ QSize KateContainerStackedLayout::minimumSize() const
 KateMainWindow::KateMainWindow (KConfig *sconfig, const QString &sgroup)
     : KateMDI::MainWindow (0)
 {
+  m_kt_last_active_view = NULL;
   m_kt_betamovemode = true;
   ifstream fi("/Users/anhk/kateconfig.txt");
   double ktuan_opac;
@@ -577,6 +578,11 @@ void KateMainWindow::slotWindowActivated ()
       connect(m_viewManager->activeView(), SIGNAL(signalRunCommand(const QString &)),
           m_mainWindow, SIGNAL(signalRunCommand(const QString &)), Qt::UniqueConnection);
 
+      if (m_viewManager->activeView() != m_kt_last_active_view && m_kt_last_active_view != NULL) {
+        disconnect(m_mainWindow, SIGNAL(signalRunJSCommand(const QString &)),
+          m_kt_last_active_view, SLOT(runJSCommand(const QString &)));
+      }
+      m_kt_last_active_view = m_viewManager->activeView();
       connect(m_mainWindow, SIGNAL(signalRunJSCommand(const QString &)),
         m_viewManager->activeView(), SLOT(runJSCommand(const QString &)), Qt::UniqueConnection);
 
