@@ -76,6 +76,7 @@ class KatePluginRecursivePartView : public Kate::PluginView, public Kate::XMLGUI
 public slots:
   void slotGetFocus(KTextEditor::View*);
   void slotLostFocus(KTextEditor::View*);
+  void runCommand(const QString &);
 signals:
   void updateAlphaBetaMoveMode(bool b);
 };

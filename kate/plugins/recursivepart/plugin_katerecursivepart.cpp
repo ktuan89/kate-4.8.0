@@ -41,6 +41,7 @@
 
 #include <algorithm>
 #include <cmath>
+
 using namespace std;
 
 K_PLUGIN_FACTORY(KatePluginRecursivePartFactory, registerPlugin<KatePluginRecursivePart>();)
@@ -87,6 +88,11 @@ KatePluginRecursivePartView::KatePluginRecursivePartView( Kate::MainWindow *main
 
   connect(this, SIGNAL(updateAlphaBetaMoveMode(bool)), view, SLOT(updateAlphaBetaMoveMode(bool)));
   emit updateAlphaBetaMoveMode(true);
+
+  connect(
+    mainWin, SIGNAL(signalRunCommand(const QString &)),
+    this, SLOT(runCommand(const QString &))
+  );
 }
 
 KatePluginRecursivePartView::~KatePluginRecursivePartView()
@@ -94,6 +100,20 @@ KatePluginRecursivePartView::~KatePluginRecursivePartView()
   mainWindow()->guiFactory()->removeClient(m_part);
   if (m_part) delete m_part;
   delete m_toolview;
+}
+
+void KatePluginRecursivePartView::runCommand(const QString &command) {
+  if (command.startsWith("RP set ")) {
+    m_part->activeView()->document()->setText(command.mid(7));
+  }
+  else if (command.startsWith("RP get")) {
+    // TODO
+    /*KTextEditor::Command *p = KateCmd::self()->queryCommand ("recursivePartGetText");
+    QString msg;
+    QString content = m_part->activeView()->document()->text();
+    content.replace("\n", "~");
+    p->exec (m_part->activeView(), "recursivePartGetText \'" + content + "\'", msg);*/
+  }
 }
 
 void KatePluginRecursivePartView::slotGetFocus(KTextEditor::View *view) {
