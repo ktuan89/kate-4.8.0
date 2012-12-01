@@ -23,6 +23,7 @@
 
 #include <kate/documentmanager.h>
 #include <kate/application.h>
+#include <ktexteditor/cursor.h>
 #include <ktexteditor/view.h>
 #include <ktexteditor/document.h>
 
@@ -38,7 +39,6 @@
 
 #include <QUrl>
 #include <QStringList>
-#include <QTimer>
 
 #include <algorithm>
 #include <cmath>
@@ -95,15 +95,19 @@ KatePluginRecursivePartView::KatePluginRecursivePartView( Kate::MainWindow *main
     this, SLOT(runCommand(const QString &))
   );
 
-  QTimer *timer = new QTimer(this);
-  connect(timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
-  timer->setSingleShot(false);
-  timer->setInterval(4222);
-  timer->start();
+  m_timer = new QTimer(this);
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(slotTimeout()));
+  m_timer->setSingleShot(false);
+  m_timer->setInterval(4222);
+  m_timer->start();
 }
 
 KatePluginRecursivePartView::~KatePluginRecursivePartView()
 {
+  if (m_timer) {
+    m_timer->stop();
+    delete m_timer;
+  }
   mainWindow()->guiFactory()->removeClient(m_part);
   if (m_part) delete m_part;
   delete m_toolview;
@@ -117,6 +121,13 @@ void KatePluginRecursivePartView::runCommand(const QString &command) {
     QString content = m_part->activeView()->document()->text();
     content.replace("\n", "~");
     mainWindow()->runJSCommand("recursivePartGetText \'" + content + "\'");
+  }
+  else if (command.startsWith("RP pos ")) {
+    QStringList params = command.mid(7).split(" ");
+    m_part->activeView()->setCursorPosition(KTextEditor::Cursor(
+      params[0].toInt(),
+      params[1].toInt()
+    ));
   }
 }
 

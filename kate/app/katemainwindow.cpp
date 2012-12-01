@@ -578,7 +578,9 @@ void KateMainWindow::slotWindowActivated ()
       connect(m_viewManager->activeView(), SIGNAL(signalRunCommand(const QString &)),
           m_mainWindow, SIGNAL(signalRunCommand(const QString &)), Qt::UniqueConnection);
 
-      if (m_viewManager->activeView() != m_kt_last_active_view && m_kt_last_active_view != NULL) {
+      if (m_viewManager->activeView() != m_kt_last_active_view &&
+          m_kt_last_active_view != NULL &&
+          m_viewManager->hasView(m_kt_last_active_view)) {
         disconnect(m_mainWindow, SIGNAL(signalRunJSCommand(const QString &)),
           m_kt_last_active_view, SLOT(runJSCommand(const QString &)));
       }

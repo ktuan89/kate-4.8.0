@@ -2,7 +2,7 @@ set(katerecursivepartplugin_PART_SRCS plugin_katerecursivepart.cpp )
 
 kde4_add_plugin(katerecursivepartplugin ${katerecursivepartplugin_PART_SRCS})
 
-target_link_libraries(katerecursivepartplugin  ${KDE4_KDEUI_LIBS} kateinterfaces )
+target_link_libraries(katerecursivepartplugin  ${KDE4_KDEUI_LIBS} kateinterfaces ${KDE4_KTEXTEDITOR_LIBS})
 
 ########### install files ###############
 install(TARGETS katerecursivepartplugin  DESTINATION ${PLUGIN_INSTALL_DIR} )

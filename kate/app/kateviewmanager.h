@@ -166,6 +166,8 @@ class KateViewManager : public QSplitter
     KTextEditor::View* activeView ();
     KateViewSpace* activeViewSpace ();
 
+    bool hasView(KTextEditor::View *view);
+
     int viewCount () const;
     int viewSpaceCount () const;
 

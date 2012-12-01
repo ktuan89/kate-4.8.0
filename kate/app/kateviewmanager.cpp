@@ -636,6 +636,10 @@ KTextEditor::View *KateViewManager::activateView( KTextEditor::Document *d )
   return activeView ();
 }
 
+bool KateViewManager::hasView(KTextEditor::View *view) {
+  return m_activeStates.contains(view);
+}
+
 void KateViewManager::showviewspace(int i) {
     if (0 <= i && i < m_viewSpaceList.count()) {
         setActiveSpace(m_viewSpaceList.at(i));

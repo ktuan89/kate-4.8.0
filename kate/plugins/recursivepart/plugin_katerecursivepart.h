@@ -42,6 +42,7 @@
 #include <QString>
 #include <QNetworkReply>
 #include <QSslError>
+#include <QTimer>
 
 #include <map>
 using namespace std;
@@ -72,6 +73,7 @@ class KatePluginRecursivePartView : public Kate::PluginView, public Kate::XMLGUI
     Kate::MainWindow *m_mw;
     QWidget *m_toolview;
     KTextEditor::Document *m_part;
+    QTimer *m_timer;
 
 public slots:
   void slotGetFocus(KTextEditor::View*);
