@@ -2075,8 +2075,8 @@ bool KateDocument::openFile()
 
   if (!suppressOpeningErrorDialogs())
   {
-    if (!success)
-      KMessageBox::error (parentWidget, i18n ("The file %1 could not be loaded, as it was not possible to read from it.\n\nCheck if you have read access to this file.", this->url().pathOrUrl()));
+    /*if (!success)
+      KMessageBox::error (parentWidget, i18n ("The file %1 could not be loaded, as it was not possible to read from it.\n\nCheck if you have read access to this file.", this->url().pathOrUrl()));*/
   }
 
   if (!success) {
