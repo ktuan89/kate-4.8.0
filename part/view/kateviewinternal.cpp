@@ -3338,7 +3338,8 @@ void KateViewInternal::clear()
 void KateViewInternal::wheelEvent(QWheelEvent* e)
 {
   // zoom text, if ctrl is pressed
-  if (e->modifiers() == Qt::ControlModifier) {
+  // ktuan - I don't want this :(
+  /*if (e->modifiers() == Qt::ControlModifier) {
     if (e->delta() > 0) {
       slotIncFontSizes();
     } else {
@@ -3346,7 +3347,7 @@ void KateViewInternal::wheelEvent(QWheelEvent* e)
     }
     e->accept();
     return;
-  }
+  }*/
 
   // scroll up/down or left/right, if possible
   if (m_lineScroll->minimum() != m_lineScroll->maximum() && e->orientation() != Qt::Horizontal) {
@@ -3357,7 +3358,7 @@ void KateViewInternal::wheelEvent(QWheelEvent* e)
       else
         scrollNextPage();
     } else {
-      scrollViewLines(e->delta() > 0 ? -3 : 3);
+      scrollViewLines(e->delta() > 0 ? -1 : 1);
       e->accept();
       return;
     }
