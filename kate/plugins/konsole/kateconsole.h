@@ -215,7 +215,7 @@ class KateConsole : public KVBox, public Kate::XMLGUIClient
     QString m_lastfilename;
     QLinkedList<QString> m_searchList;
 
-    bool m_kt_open_immediately;
+    int m_kt_open_immediately;
   public:
     QString m_kt_comm_temp;
 };

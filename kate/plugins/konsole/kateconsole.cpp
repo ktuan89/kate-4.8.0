@@ -144,7 +144,7 @@ KateConsole::KateConsole (KateKonsolePlugin* plugin, Kate::MainWindow *mw, QWidg
     , m_mw (mw)
     , m_toolView (parent)
     , m_plugin(plugin)
-    , m_kt_open_immediately(false)
+    , m_kt_open_immediately(0)
     , m_kt_comm_temp("tbgs ###")
 {
   QAction* a = actionCollection()->addAction("katekonsole_tools_pipe_to_terminal");
@@ -270,9 +270,8 @@ void KateConsole::runCommand(const QString & command) {
     QString filepath = command.mid(3);
     mainWindow()->openUrl(KUrl(filepath));
   } else if (command.startsWith("OPEN ")) {
-    QString class_name = command.mid(5);
-    m_kt_open_immediately = true;
-    sendInput("tbgs \"class " + class_name + "\" | grep -E '(class " + class_name + "$|class " + class_name + " )'; tbgs \"trait " + class_name + "\" | grep -E '(trait " + class_name + "$|trait " + class_name + " )'; tbgs \"interface " + class_name + "\" | grep -E '(interface " + class_name + "$|interface " + class_name + " )'; echo KTENDEND\n");
+    m_kt_open_immediately = 3;
+    sendInput(command.mid(5));
   } else if (command.startsWith("VIEW ")) {
     QString url = command.mid(5);
     QDesktopServices::openUrl(url);
@@ -289,7 +288,8 @@ void KateConsole::receiveLine(const QString & line) {
   // kDebug(db_area) << "\'" << line << "\'";
   if (line.startsWith("www") || line.startsWith("fbcode") ||
       line.startsWith("dataswarm") || line.startsWith("source")) {
-    if (m_kt_open_immediately) {
+    if (m_kt_open_immediately > 0) {
+      m_kt_open_immediately--;
       QString filename = line;
       int i = filename.indexOf(":");
       if (i != -1) {
@@ -301,7 +301,7 @@ void KateConsole::receiveLine(const QString & line) {
     m_searchList.prepend(line);
     while (m_searchList.count() > 200) m_searchList.removeLast();
   } else if (line.startsWith("KTENDEND")) {
-    m_kt_open_immediately = false;
+    m_kt_open_immediately = 0;
   } else {
     if (line.startsWith("#\tmodified:   ") ||
         line.startsWith("#\tnew file:   ")
