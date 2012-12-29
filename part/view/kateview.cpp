@@ -3070,8 +3070,6 @@ void KateView::runJSCommand(const QString & command) {
   if (p) {
     QString msg;
     p->exec (this, command, msg);
-    int db_area = KDebug::registerArea("ktuan-debug");
-    kDebug(db_area) << msg;
   }
 }
 

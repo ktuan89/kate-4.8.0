@@ -1,5 +1,5 @@
 /*   Kate search plugin
- * 
+ *
  * Copyright (C) 2011 by Kåre Särs <kare.sars@iki.fi>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ void ReplaceMatches::replaceChecked(QTreeWidget *tree, const QRegExp &regexp, co
 {
     if (m_manager == 0) return;
     if (m_rootIndex != -1) return;
-    
+
     m_tree = tree;
     m_rootIndex = 0;
     m_regExp = regexp;
@@ -96,7 +96,7 @@ void ReplaceMatches::doReplaceNextMatch()
     int column;
     int len;
     QTreeWidgetItem *item;
-    
+
     // lines might be modified so search the document again
     for (int i=0; i<rootItem->childCount(); i++) {
         item = rootItem->child(i);
@@ -131,4 +131,4 @@ void ReplaceMatches::doReplaceNextMatch()
     m_rootIndex++;
     emit replaceNextMatch();
 }
- 
+

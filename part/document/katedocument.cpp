@@ -2689,7 +2689,14 @@ bool KateDocument::typeChars ( KateView *view, const QString &chars )
     view->setCursorPositionInternal (view->cursorPosition() - KTextEditor::Cursor(0,1));
 
   KTextEditor::Cursor b(view->cursorPosition());
-  m_indenter->userTypedChar (view, b, chars.isEmpty() ? QChar() :  chars.at(chars.length() - 1));
+  QChar typed_char = chars.isEmpty() ? QChar() :  chars.at(chars.length() - 1);
+  m_indenter->userTypedChar (view, b, typed_char);
+  view->runJSCommand(
+    QString("typedChar %1 %2 %3")
+      .arg(b.line())
+      .arg(b.column())
+      .arg((int)(typed_char.toAscii()))
+  );
 
   editEnd ();
 
@@ -2725,6 +2732,11 @@ void KateDocument::newLine( KateView *v )
 
   // second: indent the new line, if needed...
   m_indenter->userTypedChar(v, v->cursorPosition(), '\n');
+  v->runJSCommand(
+    QString("typedChar %1 %2 10")
+      .arg(v->cursorPosition().line())
+      .arg(v->cursorPosition().column())
+  );
 
   removeTrailingSpace( ln );
 

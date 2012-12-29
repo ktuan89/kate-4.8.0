@@ -1,5 +1,5 @@
 /*   Kate search plugin
- * 
+ *
  * Copyright (C) 2011 by Kåre Särs <kare.sars@iki.fi>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -81,7 +81,7 @@ void SearchFolder::handleNextItem(const QFileInfo &item)
     }
     else {
         QDir currentDir(item.absoluteFilePath());
-        
+
         if (!currentDir.isReadable()) {
             kDebug() << currentDir.absolutePath() << "Not readable";
             return;
@@ -114,7 +114,7 @@ void SearchFolder::handleNextItem(const QFileInfo &item)
 void SearchFolder::searchFile(const QFileInfo &item)
 {
     if (m_cancelSearch) return;
-    
+
     QFile file (item.absoluteFilePath());
 
     if (!file.open(QFile::ReadOnly)) {

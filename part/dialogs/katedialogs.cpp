@@ -974,7 +974,7 @@ void KateSaveConfigTab::apply()
   KateDocumentConfig::global()->setEol(ui->cmbEOL->currentIndex());
   KateDocumentConfig::global()->setAllowEolDetection(ui->chkDetectEOL->isChecked());
   KateDocumentConfig::global()->setBom(ui->chkEnableBOM->isChecked());
-  
+
   KateDocumentConfig::global()->setLineLengthLimit(ui->lineLengthLimit->value());
 
   KateDocumentConfig::global()->configEnd ();
