@@ -1142,6 +1142,7 @@ QString KateView::viewMode () const
 void KateView::slotGotFocus()
 {
   //kDebug(13020) << "KateView::slotGotFocus";
+  m_doc->reloadIfNeeded();
 
   if ( !viInputMode() ) {
     activateEditActions();

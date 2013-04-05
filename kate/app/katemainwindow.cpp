@@ -291,6 +291,11 @@ void KateMainWindow::setupActions()
   connect( a, SIGNAL(triggered()), KateDocManager::self(), SLOT(reloadAll()) );
   a->setWhatsThis(i18n("Reload all open documents."));
 
+  a = actionCollection()->addAction( "file_need_reload_all" );
+  a->setText( i18n("Need reload All") );
+  connect( a, SIGNAL(triggered()), KateDocManager::self(), SLOT(needReloadAll()) );
+  a->setWhatsThis(i18n("All open documents need reloading."));
+
   a = actionCollection()->addAction( "file_close_orphaned" );
   a->setText( i18n("Close Orphaned") );
   connect( a, SIGNAL(triggered()), KateDocManager::self(), SLOT(closeOrphaned()) );

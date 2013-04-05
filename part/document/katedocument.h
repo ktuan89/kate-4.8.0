@@ -842,6 +842,8 @@ class KATEPART_TESTS_EXPORT KateDocument : public KTextEditor::Document,
      * Reloads the current document from disk if possible
      */
     virtual bool documentReload ();
+    virtual bool markNeedReload ();
+    virtual void reloadIfNeeded ();
 
     virtual bool documentSave ();
     virtual bool documentSaveAs ();
@@ -1169,6 +1171,8 @@ class KATEPART_TESTS_EXPORT KateDocument : public KTextEditor::Document,
   //helpers for scripting and codefolding
     int defStyleNum(int line, int column);
     bool isComment(int line, int column);
+
+    bool m_needReload;
 
 };
 

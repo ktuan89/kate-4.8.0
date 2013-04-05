@@ -162,6 +162,8 @@ class KateDocManager : public QObject
      */
     void reloadAll();
 
+    void needReloadAll();
+
     /**
      * close all documents, which could not be reopened
      */

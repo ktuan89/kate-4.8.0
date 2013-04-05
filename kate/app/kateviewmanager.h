@@ -176,6 +176,8 @@ class KateViewManager : public QSplitter
       return m_blockViewCreationAndActivation;
     }
 
+    void reloadTopViews();
+
   private Q_SLOTS:
     void slotViewChanged();
 

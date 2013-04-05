@@ -510,6 +510,13 @@ void KateDocManager::reloadAll()
     doc->documentReload();
 }
 
+void KateDocManager::needReloadAll() {
+  foreach ( KTextEditor::Document *doc, m_docList )
+    doc->markNeedReload();
+  for (int i = 0; i < KateApp::self()->mainWindows (); i++ )
+    KateApp::self()->mainWindow(i)->viewManager()->reloadTopViews();
+}
+
 void KateDocManager::closeOrphaned()
 {
   foreach ( KTextEditor::Document *doc, m_docList )

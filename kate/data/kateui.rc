@@ -19,6 +19,7 @@
 
     <DefineGroup name="revert_merge" />
     <Action name="file_reload_all" />
+    <Action name="file_need_reload_all" />
     <Action name="file_close_orphaned" />
     <DefineGroup name="print_merge" />
     <DefineGroup name="export_merge" />

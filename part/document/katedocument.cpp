@@ -188,7 +188,8 @@ KateDocument::KateDocument ( bool bSingleViewMode, bool bBrowserView,
   m_config(new KateDocumentConfig(this)),
   m_fileChangedDialogsActivated(false),
   m_savingToUrl(false),
-  m_onTheFlyChecker(0)
+  m_onTheFlyChecker(0),
+  m_needReload(false)
 {
   setComponentData ( KateGlobal::self()->componentData () );
 
@@ -3995,6 +3996,18 @@ bool KateDocument::documentReload()
   }
 
   return false;
+}
+
+bool KateDocument::markNeedReload() {
+  m_needReload = true;
+  return true;
+}
+
+void KateDocument::reloadIfNeeded() {
+  if (m_needReload) {
+    m_needReload = false;
+    documentReload();
+  }
 }
 
 bool KateDocument::documentSave()

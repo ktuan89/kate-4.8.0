@@ -691,6 +691,15 @@ void KateViewManager::activateNextSwitchableView() {
   }
 }
 
+void KateViewManager::reloadTopViews() {
+  foreach (KateViewSpace *space, m_viewSpaceList) {
+    if (space->currentView()) {
+      KTextEditor::Document *doc = space->currentView()->document();
+      doc->reloadIfNeeded();
+    }
+  }
+}
+
 void KateViewManager::activatePrevView()
 {
   int i = m_viewSpaceList.indexOf (activeViewSpace()) - 1;

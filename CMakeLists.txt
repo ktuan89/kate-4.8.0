@@ -33,7 +33,7 @@ if (NOT KDE_NO_DEPRECATED)
   set (KDE_4_4_LIBS_NEEDED ${KDE4_KUTILS_LIBS})
 endif()
 
-option(BUILD_KTEXTEDITOR "Build KTextEditor interfaces, instead of reusing the system version" OFF)
+option(BUILD_KTEXTEDITOR "Build KTextEditor interfaces, instead of reusing the system version" ON)
 if (BUILD_KTEXTEDITOR)
   # use our own copies of some stuff
   set (KDE4_KTEXTEDITOR_LIBS "ktexteditor")

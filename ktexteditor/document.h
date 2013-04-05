@@ -262,6 +262,9 @@ class KTEXTEDITOR_EXPORT Document : public KParts::ReadWritePart
      */
     virtual bool documentReload () = 0;
 
+    virtual bool markNeedReload () {}
+    virtual void reloadIfNeeded () {}
+
     /**
      * Save the current file.
      * The user will be asked for a filename if needed and more.
