@@ -54,6 +54,7 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 #include <qcoreapplication.h>
+#include <QUrl>
 
 K_PLUGIN_FACTORY(KateKonsoleFactory, registerPlugin<KateKonsolePlugin>();)
 K_EXPORT_PLUGIN(KateKonsoleFactory(KAboutData("katekonsole","katekonsoleplugin",ki18n("Konsole"), "0.1", ki18n("Embedded Konsole"), KAboutData::License_LGPL_V2)) )
@@ -298,10 +299,12 @@ void KateConsole::receiveLine(const QString & line) {
       mainWindow()->openUrl( KUrl("/Users/anhk/" + filename));
     }
     emit signalReceiveLine(line);
-    m_searchList.prepend(line);
-    while (m_searchList.count() > 200) m_searchList.removeLast();
+    m_searchList.append(line);
+    while (m_searchList.count() > 100) m_searchList.removeLast();
   } else if (line.startsWith("KTENDEND")) {
     m_kt_open_immediately = 0;
+  } else if (line.startsWith("KTNEWLIST")) {
+    m_searchList.clear();
   } else {
     if (line.startsWith("#\tmodified:   ") ||
         line.startsWith("#\tnew file:   ")
@@ -513,13 +516,10 @@ bool PluginKonsoleDialog::eventFilter(QObject *obj, QEvent *event) {
             }
             if (keyEvent->key() == Qt::Key_Tab) {
               m_fileslist->clear();
-              if (m_inputLine->text() == "") {
-                m_console->sendInput("cat ~/www/.git/COMMIT_EDITMSG\n");
-              } else {
-                QString s = m_console->m_kt_comm_temp;
-                s.replace("###", m_inputLine->text());
-                m_console->sendInput(s + "\n");
-              }
+              m_console->mainWindow()->runJSCommand(
+                "processSearchInput " +
+                QUrl::toPercentEncoding(m_inputLine->text())
+              );
               return true;
             }
         } else {
