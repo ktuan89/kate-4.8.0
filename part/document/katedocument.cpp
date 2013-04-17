@@ -2662,6 +2662,15 @@ bool KateDocument::typeChars ( KateView *view, const QString &chars )
   if (buf.isEmpty())
     return false;
 
+  QChar typed_char = chars.isEmpty() ? QChar() :  chars.at(chars.length() - 1);
+  KTextEditor::Cursor b(view->cursorPosition());
+  view->runJSCommand(
+    QString("typedCharBefore %1 %2 %3")
+      .arg(b.line())
+      .arg(b.column())
+      .arg((int)(typed_char.toAscii()))
+  );
+  
   editStart ();
 
   if (!view->config()->persistentSelection() && view->selection() )
@@ -2689,24 +2698,29 @@ bool KateDocument::typeChars ( KateView *view, const QString &chars )
   if (bracketInserted)
     view->setCursorPositionInternal (view->cursorPosition() - KTextEditor::Cursor(0,1));
 
-  KTextEditor::Cursor b(view->cursorPosition());
-  QChar typed_char = chars.isEmpty() ? QChar() :  chars.at(chars.length() - 1);
+  b = view->cursorPosition();
   m_indenter->userTypedChar (view, b, typed_char);
+
+  editEnd ();
+
+  view->slotTextInserted (view, oldCur, chars);
+
   view->runJSCommand(
     QString("typedChar %1 %2 %3")
       .arg(b.line())
       .arg(b.column())
       .arg((int)(typed_char.toAscii()))
   );
-
-  editEnd ();
-
-  view->slotTextInserted (view, oldCur, chars);
   return true;
 }
 
 void KateDocument::newLine( KateView *v )
 {
+  v->runJSCommand(
+    QString("typedCharBefore %1 %2 10")
+      .arg(v->cursorPosition().line())
+      .arg(v->cursorPosition().column())
+  );
   editStart();
 
   if( !v->config()->persistentSelection() && v->selection() )
@@ -2733,15 +2747,15 @@ void KateDocument::newLine( KateView *v )
 
   // second: indent the new line, if needed...
   m_indenter->userTypedChar(v, v->cursorPosition(), '\n');
+
+  removeTrailingSpace( ln );
+
+  editEnd();
   v->runJSCommand(
     QString("typedChar %1 %2 10")
       .arg(v->cursorPosition().line())
       .arg(v->cursorPosition().column())
   );
-
-  removeTrailingSpace( ln );
-
-  editEnd();
 }
 
 void KateDocument::transpose( const KTextEditor::Cursor& cursor)
