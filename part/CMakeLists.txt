@@ -204,11 +204,14 @@ swapfile/brokenswapfilewidget.ui
 utils/howtoimportschema.ui
 )
 
+set(katepart_RESOURCES images.qrc)
+qt4_add_resources(katepart_RESOURCES_RCC ${katepart_RESOURCES})
+
 add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=13000 )
 
 kde4_add_ui_files(katepart_PART_SRCS ${katepart_PART_UI} )
 
-kde4_add_library (katepartinterfaces ${LIBRARY_TYPE} ${katepart_PART_SRCS} )
+kde4_add_library (katepartinterfaces ${LIBRARY_TYPE} ${katepart_PART_SRCS} ${katepart_RESOURCES_RCC} )
 
 target_link_libraries (
   katepartinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KPARTS_LIBS}

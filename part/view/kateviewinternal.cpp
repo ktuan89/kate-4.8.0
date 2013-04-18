@@ -107,7 +107,7 @@ KateViewInternal::KateViewInternal(KateView *view)
   , m_alphabetamode(false)
 {
   setMinimumSize (0,0);
-  setAttribute(Qt::WA_OpaquePaintEvent);
+  // setAttribute(Qt::WA_OpaquePaintEvent);
   setAttribute(Qt::WA_InputMethodEnabled);
 
   // invalidate m_selectionCached.start(), or keyb selection is screwed initially
@@ -3024,6 +3024,8 @@ void KateViewInternal::paintEvent(QPaintEvent *e)
 
   QPainter paint(this);
   paint.setRenderHints (QPainter::Antialiasing);
+  paint.setOpacity(0.98);
+
 
   // TODO put in the proper places
   renderer()->setCaretStyle(m_view->isOverwriteMode() ? KateRenderer::Block : KateRenderer::Line);
