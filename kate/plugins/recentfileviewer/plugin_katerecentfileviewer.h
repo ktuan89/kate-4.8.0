@@ -24,12 +24,11 @@
 #include <kate/mainwindow.h>
 #include <kate/plugin.h>
 #include <kxmlguiclient.h>
+#include <KUrl>
 
 #include <QListWidget>
 #include <QListWidgetItem>
-
-#include <map>
-using namespace std;
+#include <QString>
 
 class KatePluginRecentFileViewer : public Kate::Plugin
 {
@@ -68,7 +67,10 @@ class KatePluginRecentFileViewerView : public Kate::PluginView, public Kate::XML
     void slotDocumentDeleted(KTextEditor::Document *doc);
 
   private:
+    void readConfig();
+    void writeConfig();
     void showRecentDoc(int i);
+    void deleteDoc(KTextEditor::Document *doc);
 
     Kate::MainWindow *m_mw;
     QList<KTextEditor::Document*> m_docList;
@@ -80,16 +82,16 @@ class KatePluginRecentFileViewerView : public Kate::PluginView, public Kate::XML
 
 class RecentFileViewerListItem : public QListWidgetItem {
   public:
-    RecentFileViewerListItem(QString str, KTextEditor::Document *doc)
-    : QListWidgetItem(str), kt_doc(doc) {
+    RecentFileViewerListItem(QString str, KTextEditor::Document *doc);
+    RecentFileViewerListItem(QString str, QString url, QString doc_name);
+    KTextEditor::Document *getKtDoc();
+    KUrl getDocUrl();
+    QString getDocUrlStr();
+    QString getDocName();
 
-    }
-
-    KTextEditor::Document *getKtDoc() {
-      return kt_doc;
-    }
   private:
     KTextEditor::Document *kt_doc;
+    QString m_url, m_doc_name;
 };
 
 

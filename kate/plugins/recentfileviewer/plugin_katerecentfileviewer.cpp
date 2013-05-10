@@ -34,6 +34,8 @@
 #include <kaboutdata.h>
 #include <kurl.h>
 #include <KDebug>
+#include <KConfig>
+#include <KConfigGroup>
 
 #include <QListWidget>
 
@@ -66,7 +68,7 @@ KatePluginRecentFileViewerView::KatePluginRecentFileViewerView( Kate::MainWindow
 {
     m_viewChangedRunning = false;
 
-  connect(Kate::application()->documentManager(), SIGNAL(documentDeleted(KTextEditor::Document*)),
+  connect(Kate::application()->documentManager(), SIGNAL(documentWillBeDeleted(KTextEditor::Document*)),
             this, SLOT(slotDocumentDeleted(KTextEditor::Document*)));
 
   connect( mainWin, SIGNAL(viewChanged()), SLOT(slotViewChanged()) );
@@ -116,10 +118,46 @@ KatePluginRecentFileViewerView::KatePluginRecentFileViewerView( Kate::MainWindow
           this,        SLOT(slotSelectItem(QListWidgetItem *)));
 
   mainWindow()->guiFactory()->addClient( this );
+  readConfig();
+}
+
+void KatePluginRecentFileViewerView::readConfig() {
+  KConfig *config = new KConfig("katerecentfileviewerrc", KConfig::SimpleConfig);
+  KConfigGroup *cg = new KConfigGroup(config, "krfv");
+  for (int i = 0; i < 10; ++i) {
+    QString url = cg->readEntry(QString("fileurl:%1").arg(i), "");
+    QString name = cg->readEntry(QString("filename:%1").arg(i), "");
+    if (url != "") {
+      QString p_name = QString("%1 %2").arg(i, -4).arg(name);
+      m_fileslist->addItem(new RecentFileViewerListItem(
+        p_name,
+        url,
+        name
+      ));
+    }
+  }
+}
+
+void KatePluginRecentFileViewerView::writeConfig() {
+  KConfig *config = new KConfig("katerecentfileviewerrc", KConfig::SimpleConfig);
+  KConfigGroup *cg = new KConfigGroup(config, "krfv");
+  for (int i = 0; i < 10; ++i) {
+    RecentFileViewerListItem *item = NULL;
+    if (i < m_fileslist->count())
+      item = (RecentFileViewerListItem*)m_fileslist->item(i);
+    cg->writeEntry(QString("fileurl:%1").arg(i),
+      item == NULL ? "" : item->getDocUrlStr()
+    );
+    cg->writeEntry(QString("filename:%1").arg(i),
+      item == NULL ? "" : item->getDocName()
+    );
+  }
+  config->sync();
 }
 
 KatePluginRecentFileViewerView::~KatePluginRecentFileViewerView()
 {
+  writeConfig();
   mainWindow()->guiFactory()->removeClient( this );
   delete m_fileslist;
   delete m_toolview;
@@ -133,20 +171,26 @@ void KatePluginRecentFileViewerView::slotViewChanged() {
 
   m_viewChangedRunning = true;
 
-  m_docList.removeAll(view->document());
+  deleteDoc(view->document());
+
   m_docList.append(view->document());
   if (m_docList.count() > 10) {
     m_docList.removeFirst();
   }
 
-  m_fileslist->clear();
+  QString p_name = QString("%1 %2").arg(0, -4).arg(view->document()->documentName());
+  RecentFileViewerListItem *item =
+    new RecentFileViewerListItem(p_name, view->document());
+  m_fileslist->insertItem(0, item);
+  if (m_fileslist->count() > 10) {
+    item = (RecentFileViewerListItem*)m_fileslist->item(m_fileslist->count() - 1);
+    m_fileslist->takeItem(m_fileslist->count() - 1);
+    delete item;
+  }
 
-  for (int i = 0; i < 10 && i < m_docList.count(); ++i) {
-    KTextEditor::Document *docdoc = m_docList.at(m_docList.count() - 1 - i);
-    QString p_name = QString("%1 %2").arg(i, -4).arg(docdoc->documentName());
-    RecentFileViewerListItem *item =
-      new RecentFileViewerListItem(p_name, docdoc);
-    m_fileslist->addItem(item);
+  for (int i = 0; i < m_fileslist->count(); ++i) {
+    m_fileslist->item(i)->setText(
+      QString("%1 %2").arg(i, -4).arg(m_fileslist->item(i)->text().mid(5)));
   }
 
   m_viewChangedRunning = false;
@@ -154,20 +198,23 @@ void KatePluginRecentFileViewerView::slotViewChanged() {
 
 void KatePluginRecentFileViewerView::slotDocumentDeleted(KTextEditor::Document *doc) {
   if (m_viewChangedRunning) return;
-
   m_viewChangedRunning = true;
-  m_docList.removeAll(doc);
+  deleteDoc(doc);
+  m_viewChangedRunning = false;
+}
 
+void KatePluginRecentFileViewerView::deleteDoc(KTextEditor::Document *doc) {
+  m_docList.removeAll(doc);
   for (int i = 0; i < m_fileslist->count(); ++i) {
     RecentFileViewerListItem *item = (RecentFileViewerListItem*)m_fileslist->item(i);
-    if (item->getKtDoc() == doc) {
+    if (item->getKtDoc() == doc ||
+        item->getDocName() == doc->documentName()
+    ) {
       m_fileslist->takeItem(i);
       delete item;
       --i;
     }
   }
-
-  m_viewChangedRunning = false;
 }
 
 void KatePluginRecentFileViewerView::slotShow1() {
@@ -207,7 +254,10 @@ void KatePluginRecentFileViewerView::slotSelectItem(QListWidgetItem * item) {
   m_viewChangedRunning = true;
   RecentFileViewerListItem *ii = (RecentFileViewerListItem*)item;
   if (ii) {
-    mainWindow()->activateView(ii->getKtDoc());
+    if (ii->getKtDoc() != NULL)
+      mainWindow()->activateView(ii->getKtDoc());
+    else
+      mainWindow()->openUrl(KUrl(ii->getDocUrl()));
   }
   m_viewChangedRunning = false;
 }
@@ -220,27 +270,44 @@ void KatePluginRecentFileViewerView::showRecentDoc(int i)
 
   RecentFileViewerListItem *item = (RecentFileViewerListItem*)m_fileslist->item(i);
   if (item) {
-    mainWindow()->activateView(item->getKtDoc());
+    if (item->getKtDoc() != NULL)
+      mainWindow()->activateView(item->getKtDoc());
+    else
+      mainWindow()->openUrl(KUrl(item->getDocUrl()));
   }
 }
 
 void KatePluginRecentFileViewerView::readSessionConfig( KConfigBase* config, const QString& groupPrefix )
-{
-  // If you have session-dependant settings, load them here.
-  // If you have application wide settings, you have to read your own KConfig,
-  // see the Kate::Plugin docs for more information.
-  Q_UNUSED( config );
-  Q_UNUSED( groupPrefix );
-}
+{}
 
 void KatePluginRecentFileViewerView::writeSessionConfig( KConfigBase* config, const QString& groupPrefix )
-{
-  // If you have session-dependant settings, save them here.
-  // If you have application wide settings, you have to create your own KConfig,
-  // see the Kate::Plugin docs for more information.
-  Q_UNUSED( config );
-  Q_UNUSED( groupPrefix );
+{}
+
+RecentFileViewerListItem::RecentFileViewerListItem(QString str, KTextEditor::Document *doc) : QListWidgetItem(str), kt_doc(doc) {
+  m_url = doc->url().url();
+  m_doc_name = doc->documentName();
+}
+
+RecentFileViewerListItem::RecentFileViewerListItem(QString str, QString url, QString doc_name) : QListWidgetItem(str) {
+  m_url = url;
+  m_doc_name = doc_name;
+  kt_doc = NULL;
+}
+
+KTextEditor::Document* RecentFileViewerListItem::getKtDoc() {
+  return kt_doc;
+}
+
+KUrl RecentFileViewerListItem::getDocUrl() {
+  return KUrl(m_url);
+}
+
+QString RecentFileViewerListItem::getDocUrlStr() {
+  return m_url;
+}
+
+QString RecentFileViewerListItem::getDocName() {
+  return m_doc_name;
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;
-
