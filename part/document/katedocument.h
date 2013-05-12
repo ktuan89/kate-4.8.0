@@ -817,9 +817,9 @@ class KATEPART_TESTS_EXPORT KateDocument : public KTextEditor::Document,
 
     void setDocName (const QString &docName);
 
-    void lineInfo (KateLineInfo *info, int line) const;
+    // void lineInfo (KateLineInfo *info, int line) const;
 
-    KateCodeFoldingTree *foldingTree ();
+    // KateCodeFoldingTree *foldingTree ();
 
   public:
     /**
@@ -1093,7 +1093,7 @@ class KATEPART_TESTS_EXPORT KateDocument : public KTextEditor::Document,
     virtual QString highlightingModeAt(const KTextEditor::Cursor& position);
 
   protected Q_SLOTS:
-      void dumpRegionTree();
+      // void dumpRegionTree();
 
   private slots:
       void slotCompleted();

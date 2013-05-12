@@ -178,13 +178,13 @@ class KATEPART_TESTS_EXPORT KateBuffer : public Kate::TextBuffer
      inline void updatePreviousNotEmptyLine(int current_line,bool addindent,int deindent);
 
   public:
-    inline int countVisible () const { return lines() - m_regionTree.getHiddenLinesCount(lines()); }
+    inline int countVisible () const { return lines(); } // - m_regionTree.getHiddenLinesCount(lines()); }
 
-    inline int lineNumber (int visibleLine) const { return m_regionTree.getRealLine (visibleLine); }
+    inline int lineNumber (int visibleLine) const { return visibleLine; } // m_regionTree.getRealLine (visibleLine); }
 
-    inline int lineVisibleNumber (int line) const { return m_regionTree.getVirtualLine (line); }
+    inline int lineVisibleNumber (int line) const { return line; } // m_regionTree.getVirtualLine (line); }
 
-    inline void lineInfo (KateLineInfo *info, int line) const { m_regionTree.getLineInfo(info,line); }
+    // inline void lineInfo (KateLineInfo *info, int line) const { m_regionTree.getLineInfo(info,line); }
 
     inline int tabWidth () const { return m_tabWidth; }
 
@@ -206,7 +206,7 @@ class KATEPART_TESTS_EXPORT KateBuffer : public Kate::TextBuffer
      */
     void invalidateHighlighting();
 
-    KateCodeFoldingTree *foldingTree () { return &m_regionTree; }
+    // KateCodeFoldingTree *foldingTree () { return &m_regionTree; }
 
     void codeFoldingColumnUpdate(int lineNr);
 
@@ -263,7 +263,7 @@ class KATEPART_TESTS_EXPORT KateBuffer : public Kate::TextBuffer
     /**
      * folding tree
      */
-    KateCodeFoldingTree m_regionTree;
+    // KateCodeFoldingTree m_regionTree;
 
     // for the scrapty indent sensitive langs
     int m_tabWidth;

@@ -181,11 +181,11 @@ KateViewInternal::KateViewInternal(KateView *view)
   m_leftBorder = new KateIconBorder( this, m_view );
   m_leftBorder->show ();
 
-  connect( m_leftBorder, SIGNAL(toggleRegionVisibility(int)),
-           doc()->foldingTree(), SLOT(toggleRegionVisibility(int)));
+  /*connect( m_leftBorder, SIGNAL(toggleRegionVisibility(int)),
+           doc()->foldingTree(), SLOT(toggleRegionVisibility(int)));*/
 
-  connect( doc()->foldingTree(), SIGNAL(regionVisibilityChanged()),
-           this, SLOT(slotRegionVisibilityChanged()));
+  /*connect( doc()->foldingTree(), SIGNAL(regionVisibilityChanged()),
+           this, SLOT(slotRegionVisibilityChanged()));*/
   connect( doc(), SIGNAL(codeFoldingUpdated()),
            this, SLOT(slotCodeFoldingChanged()) );
 
@@ -1862,7 +1862,7 @@ void KateViewInternal::updateCursor( const KTextEditor::Cursor& newCursor, bool 
     if ( !m_madeVisible && m_view == doc()->activeView() )
     {
       // unfold if required
-      doc()->foldingTree()->ensureVisible( newCursor.line() );
+      // doc()->foldingTree()->ensureVisible( newCursor.line() );
 
       makeVisible ( m_displayCursor, m_displayCursor.column(), false, center, calledExternally );
     }
@@ -1871,7 +1871,7 @@ void KateViewInternal::updateCursor( const KTextEditor::Cursor& newCursor, bool 
   }
 
   // unfold if required
-  doc()->foldingTree()->ensureVisible( newCursor.line() );
+  // doc()->foldingTree()->ensureVisible( newCursor.line() );
 
   KTextEditor::Cursor oldDisplayCursor = m_displayCursor;
 

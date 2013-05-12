@@ -121,7 +121,7 @@ BugTest::~BugTest()
 {
 }
 
-void BugTest::reproduceCrash()
+/*void BugTest::reproduceCrash()
 {
   KateGlobal::self()->incRef();
   KateDocument doc(false, false, false);
@@ -136,4 +136,4 @@ void BugTest::reproduceCrash()
   QTest::qWait(500);
   doc.insertText(Cursor(6, 1), "'");
   qDebug() << "!!! Huh, no crash. qWait above not long enough?";
-}
+}*/

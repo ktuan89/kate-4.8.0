@@ -31,7 +31,7 @@ public:
   ~BugTest();
 
 private Q_SLOTS:
-  void reproduceCrash();
+  // void reproduceCrash();
 
 };
 

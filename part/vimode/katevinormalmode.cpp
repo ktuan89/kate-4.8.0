@@ -266,8 +266,8 @@ bool KateViNormalMode::handleKeypress( const QKeyEvent *e )
             // jump over folding regions since we are just moving the cursor
             int currLine = m_view->cursorPosition().line();
             int delta = r.endLine - currLine;
-            int vline = doc()->foldingTree()->getVirtualLine( currLine );
-            r.endLine = doc()->foldingTree()->getRealLine( vline+delta );
+            int vline = currLine; // doc()->foldingTree()->getVirtualLine( currLine );
+            r.endLine = vline + delta; // doc()->foldingTree()->getRealLine( vline+delta );
             if ( r.endLine >= doc()->lines() ) r.endLine = doc()->lines()-1;
 
             // make sure the position is valid before moving the cursor there

@@ -212,7 +212,7 @@ void KateScrollBar::recomputeMarksPositions()
   int realHeight = style()->subControlRect(QStyle::CC_ScrollBar, &opt, QStyle::SC_ScrollBarAddPage, this).bottom() - topMargin - 1;
 
   const QHash<int, KTextEditor::Mark*> &marks = m_doc->marks();
-  KateCodeFoldingTree *tree = m_doc->foldingTree();
+  // KateCodeFoldingTree *tree = m_doc->foldingTree();
 
   for (QHash<int, KTextEditor::Mark*>::const_iterator i = marks.constBegin(); i != marks.constEnd(); ++i)
   {
@@ -220,7 +220,7 @@ void KateScrollBar::recomputeMarksPositions()
 
     uint line = mark->line;
 
-    if (tree)
+    /*if (tree)
     {
       KateCodeFoldingNode *node = tree->findNodeForLine(line);
 
@@ -230,7 +230,7 @@ void KateScrollBar::recomputeMarksPositions()
           line = tree->getStartLine(node);
         node = node->getParentNode();
       }
-    }
+    }*/
 
     line = m_doc->getVirtualLine(line);
 
@@ -1034,14 +1034,14 @@ void KateIconBorder::paintBorder (int /*x*/, int y, int /*width*/, int height)
   p.setRenderHints (QPainter::TextAntialiasing);
   p.setFont ( m_view->renderer()->config()->font() ); // for line numbers
 
-  KateLineInfo oldInfo;
+  /*KateLineInfo oldInfo;
   if (startz < lineRangesSize)
   {
     if ((m_viewInternal->cache()->viewLine(startz).line()-1) < 0)
       oldInfo.topLevel = true;
     else
       m_doc->lineInfo(&oldInfo,m_viewInternal->cache()->viewLine(startz).line()-1);
-  }
+  }*/
 
   KTextEditor::AnnotationModel *model = m_view->annotationModel() ?
       m_view->annotationModel() : m_doc->annotationModel();
@@ -1220,7 +1220,7 @@ void KateIconBorder::paintBorder (int /*x*/, int y, int /*width*/, int height)
     }
 
     // folding markers
-    if( m_foldingMarkersOn )
+    /*if( m_foldingMarkersOn )
     {
       if( realLine > -1 )
       {
@@ -1282,7 +1282,7 @@ void KateIconBorder::paintBorder (int /*x*/, int y, int /*width*/, int height)
       }
 
       lnX += iconPaneWidth;
-    }
+    }*/
 
     // modified line system
     if (realLine > -1 && !m_doc->url().isEmpty()) {
@@ -1368,7 +1368,7 @@ void KateIconBorder::showBlock()
 
   // get the new range, that should be highlighted
   KTextEditor::Range newRange = KTextEditor::Range::invalid();
-  KateCodeFoldingTree *tree = m_doc->foldingTree();
+  /*KateCodeFoldingTree *tree = m_doc->foldingTree();
   if (tree) {
     KateCodeFoldingNode *node = tree->findNodeForLine(m_currentBlockLine);
     KTextEditor::Cursor beg;
@@ -1390,7 +1390,7 @@ void KateIconBorder::showBlock()
       }
     }
 
-  }
+  }*/
 
   if (newRange.isValid() && m_foldingRange && *m_foldingRange == newRange) {
     // new range equals the old one, nothing to do.
@@ -1514,7 +1514,7 @@ void KateIconBorder::mouseReleaseEvent( QMouseEvent* e )
         }
     }
 
-    if ( area == FoldingMarkers) {
+    /*if ( area == FoldingMarkers) {
       // if a folding range exists, fold this one, -> use start line of the range
       int lineToFold = cursorOnLine;
       if (m_foldingRange && m_foldingRange->start().line() >= 0) {
@@ -1525,7 +1525,7 @@ void KateIconBorder::mouseReleaseEvent( QMouseEvent* e )
       if ((info.startsVisibleBlock) || (info.startsInVisibleBlock)) {
         emit toggleRegionVisibility(lineToFold);
       }
-    }
+    }*/
 
     if ( area == AnnotationBorder ) {
       if( e->button() == Qt::LeftButton && KGlobalSettings::singleClick() ) {

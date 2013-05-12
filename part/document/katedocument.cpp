@@ -217,8 +217,8 @@ KateDocument::KateDocument ( bool bSingleViewMode, bool bBrowserView,
   connect(m_buffer, SIGNAL(tagLines(int,int)), this, SLOT(tagLines(int,int)));
   connect(m_buffer, SIGNAL(respellCheckBlock(int,int)), this , SLOT(respellCheckBlock(int,int)));
   connect(m_buffer, SIGNAL(codeFoldingUpdated()),this,SIGNAL(codeFoldingUpdated()));
-  connect(this,SIGNAL(aboutToReload(KTextEditor::Document*)),foldingTree(),SLOT(saveFoldingState()));
-  connect(this,SIGNAL(reloaded(KTextEditor::Document*)),foldingTree(),SLOT(applyFoldingState()));
+  // connect(this,SIGNAL(aboutToReload(KTextEditor::Document*)),foldingTree(),SLOT(saveFoldingState()));
+  // connect(this,SIGNAL(reloaded(KTextEditor::Document*)),foldingTree(),SLOT(applyFoldingState()));
 
   // if the user changes the highlight with the dialog, notify the doc
   connect(KateHlManager::self(),SIGNAL(changed()),SLOT(internalHlChanged()));
@@ -1347,12 +1347,12 @@ bool KateDocument::editRemoveLines ( int from, int to )
   editStart();
   QStringList oldText;
 
-  for (int line = to; line >= from; line--) {
+  /*for (int line = to; line >= from; line--) {
     KateLineInfo info;
     lineInfo(&info, line);
     if (info.startsInVisibleBlock)
       foldingTree()->toggleRegionVisibility(line);
-  }
+  }*/
 
   for (int line = to; line >= from; line--) {
     Kate::TextLine tl = m_buffer->line (line);
@@ -1641,7 +1641,7 @@ void KateDocument::readParameterizedSessionConfig(const KConfigGroup &kconfig,
 
   if(!(configParameters & KTextEditor::ParameterizedSessionConfigInterface::SkipFolding)) {
       // restore folding nodes
-      foldingTree()->readSessionConfig(kconfig);
+      // foldingTree()->readSessionConfig(kconfig);
   }
 }
 
@@ -1696,7 +1696,7 @@ void KateDocument::writeParameterizedSessionConfig(KConfigGroup &kconfig,
 
   if(!(configParameters & KTextEditor::ParameterizedSessionConfigInterface::SkipFolding)) {
     // save folding
-    foldingTree()->writeSessionConfig(kconfig);
+    // foldingTree()->writeSessionConfig(kconfig);
   }
 
 }
@@ -2670,7 +2670,7 @@ bool KateDocument::typeChars ( KateView *view, const QString &chars )
       .arg(b.column())
       .arg((int)(typed_char.toAscii()))
   );
-  
+
   editStart ();
 
   if (!view->config()->persistentSelection() && view->selection() )
@@ -3438,7 +3438,7 @@ void KateDocument::comment( KateView *v, uint line,uint column, int change)
                   && removeStartLineCommentFromSingleLine( line, startAttrib ) )
         || ( hasStartStopCommentMark
              && removeStartStopCommentFromSingleLine( line, startAttrib ) );
-      if ((!removed) && foldingTree()) {
+      /*if ((!removed) && foldingTree()) {
         kDebug(13020)<<"easy approach for uncommenting did not work, trying harder (folding tree)";
         int commentRegion=(highlight()->commentRegion(startAttrib));
         if (commentRegion){
@@ -3455,7 +3455,7 @@ void KateDocument::comment( KateView *v, uint line,uint column, int change)
             //perhaps nested regions should be hadled here too...
           } else kDebug(13020)<<"No enclosing region found";
         } else kDebug(13020)<<"No comment region specified for current hl";
-      }
+      }*/
     }
     else
     {
@@ -4077,7 +4077,7 @@ bool KateDocument::pageUpDownMovesCursor () const
   return config()->pageUpDownMovesCursor ();
 }
 
-void KateDocument::dumpRegionTree()
+/*void KateDocument::dumpRegionTree()
 {
   m_buffer->foldingTree()->debugDump();
 }
@@ -4086,12 +4086,12 @@ void KateDocument::dumpRegionTree()
 void KateDocument::lineInfo (KateLineInfo *info, int line) const
 {
   m_buffer->lineInfo(info,line);
-}
+}*/
 
-KateCodeFoldingTree *KateDocument::foldingTree ()
+/*KateCodeFoldingTree *KateDocument::foldingTree ()
 {
   return m_buffer->foldingTree();
-}
+}*/
 
 bool KateDocument::setEncoding (const QString &e)
 {

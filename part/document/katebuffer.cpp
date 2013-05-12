@@ -70,7 +70,7 @@ KateBuffer::KateBuffer(KateDocument *doc)
    m_brokenEncoding (false),
    m_tooLongLinesWrapped (false),
    m_highlight (0),
-   m_regionTree (this),
+   // m_regionTree (this),
    m_tabWidth (8),
    m_lineHighlighted (0),
    m_maxDynamicContexts (KATE_MAX_DYNAMIC_CONTEXTS)
@@ -119,7 +119,7 @@ void KateBuffer::editEnd ()
           editTagLineStart,
           editTagLineEnd,
           true);
-      m_regionTree.deleteKtNode();
+      // m_regionTree.deleteKtNode();
     }
   }
 }
@@ -129,7 +129,7 @@ void KateBuffer::clear()
   // call original clear function
   Kate::TextBuffer::clear ();
 
-  m_regionTree.clear();
+  // m_regionTree.clear();
 
   // reset the state
   m_brokenEncoding = false;
@@ -175,7 +175,7 @@ bool KateBuffer::openFile (const QString &m_file)
     m_doc->config()->setBom (true);
 
   // fix region tree
-  m_regionTree.fixRoot (lines ());
+  // m_regionTree.fixRoot (lines ());
 
   // okay, loading did work
   return true;
@@ -248,7 +248,7 @@ void KateBuffer::ensureHighlighted (int line)
 
   // ensure we have enough highlighted
   doHighlight ( m_lineHighlighted, end, false );
-  m_regionTree.deleteKtNode();
+  // m_regionTree.deleteKtNode();
 }
 
 void KateBuffer::wrapLine (const KTextEditor::Cursor &position)
@@ -259,7 +259,7 @@ void KateBuffer::wrapLine (const KTextEditor::Cursor &position)
   if (m_lineHighlighted > position.line()+1)
     m_lineHighlighted++;
 
-  m_regionTree.lineHasBeenInserted (position.line(), position.column());
+  // m_regionTree.lineHasBeenInserted (position.line(), position.column());
 
 }
 
@@ -284,7 +284,7 @@ void KateBuffer::unwrapLines (int from, int to)
   if (m_lineHighlighted > from)
     m_lineHighlighted = from;
 
-  m_regionTree.linesHaveBeenRemoved (from, to);
+  // m_regionTree.linesHaveBeenRemoved (from, to);
 }
 
 void KateBuffer::unwrapLine (int line)
@@ -295,7 +295,7 @@ void KateBuffer::unwrapLine (int line)
   if (m_lineHighlighted > line)
     --m_lineHighlighted;
 
-  m_regionTree.linesHaveBeenRemoved (line, line);
+  // m_regionTree.linesHaveBeenRemoved (line, line);
 }
 
 void KateBuffer::setTabWidth (int w)
@@ -327,8 +327,8 @@ void KateBuffer::setHighlight(int hlMode)
     h->use();
 
     // Clear code folding tree (see bug #124102)
-    m_regionTree.clear();
-    m_regionTree.fixRoot(lines());
+    // m_regionTree.clear();
+    // m_regionTree.fixRoot(lines());
 
     m_highlight = h;
 
@@ -370,7 +370,7 @@ void KateBuffer::updatePreviousNotEmptyLine(int current_line,bool addindent,int 
   textLine->setFoldingList(foldingList);
 
   bool retVal_folding = false;
-  m_regionTree.updateLine(current_line, foldingList, &retVal_folding, true,false);
+  // m_regionTree.updateLine(current_line, foldingList, &retVal_folding, true,false);
 
   // tagLines() is emitted from KatBuffer::doHighlight()!
 }
@@ -701,7 +701,7 @@ void KateBuffer::doHighlight (int startLine, int endLine, bool invalidate)
     bool retVal_folding = false;
     // ktuan bug
     //perhaps make en enums out of the change flags
-    m_regionTree.updateLine(current_line, foldingList, &retVal_folding, foldingChanged,foldingColChanged);
+    // m_regionTree.updateLine(current_line, foldingList, &retVal_folding, foldingChanged,foldingColChanged);
 
     codeFoldingUpdate = codeFoldingUpdate | retVal_folding;
     // need we to continue ?
@@ -756,7 +756,7 @@ void KateBuffer::codeFoldingColumnUpdate(int lineNr) {
     line->setFoldingColumnsOutdated(false);
     bool tmp;
     QVector<int> folding=line->foldingListArray();
-    m_regionTree.updateLine(lineNr,folding,&tmp,true,false);
+    // m_regionTree.updateLine(lineNr,folding,&tmp,true,false);
   }
 }
 

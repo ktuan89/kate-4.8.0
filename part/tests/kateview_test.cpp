@@ -149,7 +149,7 @@ void KateViewTest::testFolding()
     QCOMPARE(doc.visibleLines(), 4u);
 }
 
-void KateViewTest::testBug287291()
+/*void KateViewTest::testBug287291()
 {
     // see also: https://bugs.kde.org/show_bug.cgi?id=287291
     KTemporaryFile file;
@@ -206,7 +206,7 @@ void KateViewTest::testBug287291()
       KateLineInfo info;
       doc.lineInfo(&info, i);
     }
-}
+}*/
 
 
 void KateViewTest::testSelection()
