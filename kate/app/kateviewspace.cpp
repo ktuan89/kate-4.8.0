@@ -34,6 +34,7 @@
 #include <kdebug.h>
 #include <KStringHandler>
 #include <KVBox>
+#include <KDebug>
 
 #include <QStackedWidget>
 #include <QCursor>
@@ -49,6 +50,7 @@ KateViewSpace::KateViewSpace( KateViewManager *viewManager,
     : KVBox(parent),
     m_viewManager( viewManager )
 {
+  m_kt_debug = KDebug::registerArea("ktuan-debug");
   setObjectName(name);
 
   stack = new QStackedWidget( this );
@@ -127,6 +129,11 @@ void KateViewSpace::addView(KTextEditor::View* v, bool show)
   {
     mViewList.append(v);
     showView( v );
+    // ktuan optimization: only keep the last 50 views:
+    if (mViewList.count() > 50) {
+      kDebug(m_kt_debug) << "Delete the view: " << mViewList.first()->document()->documentName();
+      m_viewManager->deleteView(mViewList.first());
+    }
   }
   else
   {

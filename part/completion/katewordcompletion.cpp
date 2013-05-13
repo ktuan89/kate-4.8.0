@@ -284,7 +284,7 @@ void KateWordCompletionModel::processDoc(KTextEditor::Document *doc)
       if (c.isLetterOrNumber() || c == '_') {
         word.append(c);
       } else {
-        if (word != "" && !seen.contains(word)) {
+        if (word != "" && word.length() >= 5 && !seen.contains(word)) {
           // kDebug(db_area) << "add word " << word;
           word_list << word;
           seen.insert(word);

@@ -168,6 +168,7 @@ public Q_SLOTS:
     QList<KTextEditor::View*> mViewList;
     KateViewManager *m_viewManager;
     QString m_group;
+    int m_kt_debug;
 };
 
 #endif
