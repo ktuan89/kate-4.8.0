@@ -48,6 +48,7 @@ add_subdirectory( recentfileviewer )
 add_subdirectory( fastopen )
 add_subdirectory( webbrowser )
 add_subdirectory( recursivepart )
+add_subdirectory( filestore )
 
 MESSAGE( STATUS "remember to find maintainers for these plugins and port them to the kate 3.0 interfaces...")
 
