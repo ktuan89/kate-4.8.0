@@ -573,6 +573,11 @@ void KatePluginSearchView::searchDone()
 
     m_curResults = 0;
     m_toolView->unsetCursor();
+
+    // ktuan: search done: remove toolview and go to the first match
+    mainWindow()->hideToolView(m_toolView);
+    clearMarks();
+    goToNextMatch();
 }
 
 void KatePluginSearchView::itemSelected(QTreeWidgetItem *item)
