@@ -453,7 +453,7 @@ bool KateViewManager::deleteView (KTextEditor::View *view, bool delViewSpace)
 {
   if (!view) return true;
 
-  KateViewSpace *viewspace = (KateViewSpace *)view->parentWidget()->parentWidget();
+  KateViewSpace *viewspace = (KateViewSpace *)view->parentWidget()->parentWidget()->parentWidget();
 
   viewspace->removeView (view);
 
@@ -554,7 +554,7 @@ void KateViewManager::activateSpace (KTextEditor::View* v)
 {
   if (!v) return;
 
-  KateViewSpace* vs = (KateViewSpace*)v->parentWidget()->parentWidget();
+  KateViewSpace* vs = (KateViewSpace*)v->parentWidget()->parentWidget()->parentWidget();
   if (!vs->isActiveSpace())
   {
     setActiveSpace (vs);

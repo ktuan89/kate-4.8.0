@@ -32,10 +32,12 @@
 #include <QPixmap>
 #include <QLabel>
 #include <QEvent>
+#include <QResizeEvent>
 #include <KStatusBar>
 #include <KVBox>
 #include <QCheckBox>
 #include <QString>
+#include <QWebView>
 
 class KConfigBase;
 class KSqueezedTextLabel;
@@ -111,7 +113,7 @@ class KateVSStatusBar : public KStatusBar
     class KateViewSpace *m_viewSpace;
 };
 
-class KateViewSpace : public KVBox
+class KateViewSpace : public QWidget
 {
     friend class KateViewManager;
     friend class KateVSStatusBar;
@@ -124,6 +126,7 @@ class KateViewSpace : public KVBox
     bool isActiveSpace();
     void setActive(bool b, bool showled = false);
     QStackedWidget* stack;
+    KVBox *vbox;
     void addView(KTextEditor::View* v, bool show = true);
     void removeView(KTextEditor::View* v);
 
@@ -155,10 +158,18 @@ public Q_SLOTS:
     mStatusBar->updateAlphaBetaMoveMode(b);
   }
 
+  protected:
+    void resizeEvent(QResizeEvent *event);
+
   private Q_SLOTS:
     void statusBarToggled ();
+    void addSearchDockObject();
+    void slotRunCommand(const QString &command);
+    void slotFocusSearchDock();
 
   private:
+    QWebView *m_webview;
+    QWidget *m_searchDock;
     bool mIsActiveSpace;
     KateVSStatusBar* mStatusBar;
     /// This list is necessary to only save the order of the accessed views.
@@ -169,6 +180,19 @@ public Q_SLOTS:
     KateViewManager *m_viewManager;
     QString m_group;
     int m_kt_debug;
+};
+
+class KateSearchDockJSObject : public QObject {
+  Q_OBJECT
+
+public:
+
+  KateSearchDockJSObject(KateViewManager *viewManager);
+
+  Q_INVOKABLE void runJSCommand(const QString &command);
+
+private:
+  KateViewManager *m_viewManager;
 };
 
 #endif

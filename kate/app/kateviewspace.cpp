@@ -43,17 +43,35 @@
 #include <QEvent>
 #include <QMouseEvent>
 #include <QSizeGrip>
+#include <QWebView>
+#include <QWebFrame>
+#include <QWebPage>
+#include <QHBoxLayout>
+#include <QUrl>
 
 //BEGIN KateViewSpace
 KateViewSpace::KateViewSpace( KateViewManager *viewManager,
                               QWidget* parent, const char* name )
-    : KVBox(parent),
+    : QWidget(parent),
     m_viewManager( viewManager )
 {
   m_kt_debug = KDebug::registerArea("ktuan-debug");
   setObjectName(name);
 
-  stack = new QStackedWidget( this );
+  vbox = new KVBox(this);
+  m_searchDock = new QWidget(this);
+
+  m_webview = new QWebView(m_searchDock);
+  QHBoxLayout *layout = new QHBoxLayout(m_searchDock);
+  layout->setContentsMargins(0,0,0,0);
+  layout->addWidget(m_webview);
+  QWebFrame *mainFrame = m_webview->page()->mainFrame();
+  connect(mainFrame, SIGNAL(javaScriptWindowObjectCleared()), this, SLOT(addSearchDockObject()));
+  m_webview->load(QUrl("file://localhost/Users/anhk/sources/kate-4.8.0/kate/html/search.html"));
+  connect(m_viewManager->mainWindow()->mainWindow(), SIGNAL(signalRunCommand(const QString &)),
+          this, SLOT(slotRunCommand(const QString&)));
+
+  stack = new QStackedWidget( vbox );
   stack->setFocus();
   stack->setSizePolicy (QSizePolicy (QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding));
 
@@ -93,6 +111,46 @@ KateViewSpace::KateViewSpace( KateViewManager *viewManager,
 
 KateViewSpace::~KateViewSpace()
 {}
+
+void KateViewSpace::addSearchDockObject() {
+  m_webview->page()->mainFrame()->addToJavaScriptWindowObject(
+    "kateObject",
+    new KateSearchDockJSObject(m_viewManager)
+  );
+}
+
+void KateViewSpace::slotRunCommand(const QString &command) {
+  if (!isActiveSpace()) {
+    // JS of the view only control the current viewspace
+    return;
+  }
+  if (command.startsWith("SearchDock ")) {
+    QString s = command.mid(11);
+
+    if (s.startsWith("toggle")) {
+      s = m_searchDock->isVisible() ? "hide" : "show";
+    }
+    if (s.startsWith("show")) {
+      m_searchDock->show();
+      QTimer::singleShot(0, this, SLOT(slotFocusSearchDock()));
+    } else if (s.startsWith("hide")) {
+      m_searchDock->hide();
+      currentView()->setFocus();
+    } else if (s.startsWith("reload")) {
+      m_webview->triggerPageAction(QWebPage::Reload);
+    } else if (s.startsWith("focus")) {
+      QTimer::singleShot(0, this, SLOT(slotFocusSearchDock()));
+    } else if (s.startsWith("defocus")) {
+      currentView()->setFocus();
+    } else if (s.startsWith("js ")) {
+      m_webview->page()->mainFrame()->evaluateJavaScript(s.mid(3));
+    }
+  }
+}
+
+void KateViewSpace::slotFocusSearchDock() {
+  m_webview->setFocus();
+}
 
 void KateViewSpace::statusBarToggled ()
 {
@@ -213,6 +271,13 @@ void KateViewSpace::setActive( bool active, bool )
   mStatusBar->setEnabled(active);
 }
 
+void KateViewSpace::resizeEvent(QResizeEvent *resizeEvent) {
+  vbox->resize(resizeEvent->size().width(),
+               resizeEvent->size().height());
+  m_searchDock->move(resizeEvent->size().width() * 2 / 3, 10);
+  m_searchDock->resize(resizeEvent->size().width() / 3, 30);
+}
+
 void KateViewSpace::saveConfig ( KConfigBase* config, int myIndex , const QString& viewConfGrp)
 {
 //   kDebug()<<"KateViewSpace::saveConfig("<<myIndex<<", "<<viewConfGrp<<") - currentView: "<<currentView()<<")";
@@ -278,7 +343,7 @@ void KateViewSpace::restoreConfig ( KateViewManager *viewMan, const KConfigBase*
 
 //BEGIN KateVSStatusBar
 KateVSStatusBar::KateVSStatusBar ( KateViewSpace *parent)
-    : KStatusBar( parent),
+    : KStatusBar( parent->vbox),
     m_viewSpace( parent )
 {
   QString lineColText = i18n(" Line: %1 Col: %2 ", KGlobal::locale()->formatNumber(4444, 0),
@@ -510,5 +575,17 @@ void KateVSStatusBar::documentNameItemVisibilityChanged(bool visible)
 }
 
 //END KateVSStatusBar
+
+//BEGIN KateSearchDockJSObject
+
+KateSearchDockJSObject::KateSearchDockJSObject(KateViewManager *viewManager)
+  : m_viewManager(viewManager) {
+}
+
+void KateSearchDockJSObject::runJSCommand(const QString &command) {
+  m_viewManager->mainWindow()->mainWindow()->runJSCommand(command);
+}
+
+//END KateSearchDockJSObject
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

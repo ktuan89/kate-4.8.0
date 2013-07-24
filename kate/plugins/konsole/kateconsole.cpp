@@ -278,7 +278,7 @@ void KateConsole::runCommand(const QString & command) {
     QDesktopServices::openUrl(url);
   } else if (command.startsWith("SC ")) {
     m_kt_comm_temp = command.mid(3);
-  } else if (!command.startsWith("WB") && !command.startsWith("RP")) {
+  } else if (!command.startsWith("WB") && !command.startsWith("RP") && !command.startsWith("SearchDock")) {
     sendInput(command);
   }
 }

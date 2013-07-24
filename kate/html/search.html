@@ -1,0 +1,83 @@
+<html>
+  <style type="text/css">
+
+    input {
+      font-family: Monaco;
+      font-size: 14px;
+      color: #BBC346;
+      background: none;
+      border: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    input:focus {
+      outline-width: 0;
+    }
+
+    ::selection {
+      background: red;
+      color: blue;
+    }
+  </style>
+  <script>
+    function debug(e) {
+      kateObject.runJSCommand('fromSearchDock debug ' + e);
+    }
+    function checkKey(e) {
+      if (e.keyCode == 27) {
+        kateObject.runJSCommand('fromSearchDock hide');
+      } else if (e.keyCode == 13) {
+        e.preventDefault();
+        var element = document.getElementById('search_input');
+        kateObject.runJSCommand('fromSearchDock gonext ' + escape(element.value));
+        return false;
+      } else if (e.keyCode == 74 && e.metaKey) {
+        e.preventDefault();
+        kateObject.runJSCommand('fromSearchDock defocus');
+        return false;
+      }/* else {
+        setTimeout(function() {
+          var element = document.getElementById('search_input');
+          kateObject.runJSCommand('fromSearchDock search ' + escape(element.value));
+        });
+      }*/
+    }
+
+    function onChangeChange(e) {
+      setTimeout(function() {
+        var element = document.getElementById('search_input');
+        kateObject.runJSCommand('fromSearchDock search ' + escape(element.value));
+      });
+    }
+
+    function getFocusBack() {
+      var element = document.getElementById('search_input');
+      element.focus();
+    }
+
+    function selectAll() {
+      var element = document.getElementById('search_input');
+      element.select();
+    }
+
+    function notfound() {
+      document.body.style.background = "#353030";
+    }
+
+    function found() {
+      document.body.style.background = "#303030";
+    }
+  </script>
+  <body style="background-color: #303030; margin: 0px;">
+    <input id="search_input"
+           type="text"
+           onkeypress="checkKey(event)"
+           onkeyup="onChangeChange(event)"
+           onfocusout="getFocusBack()"
+           autofocus></input>
+  </body>
+</html>
