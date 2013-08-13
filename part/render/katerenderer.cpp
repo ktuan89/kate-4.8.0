@@ -64,11 +64,6 @@ KateRenderer::KateRenderer(KateDocument* doc, KateView *view)
     , m_config(new KateRendererConfig(this))
 {
   updateAttributes ();
-  QString s = "";
-  for (int i = 0; i < 100; ++i) {
-    m_widthOf[i] = config()->fontMetrics().width(s);
-    s.append('x');
-  }
   /*int db_area = KDebug::registerArea("ktuan-debug");
   kDebug(db_area) << "space width: " << config()->fontMetrics().width(spaceChar);
   kDebug(db_area) << "x width: " << config()->fontMetrics().width('x');
@@ -89,6 +84,11 @@ KateRenderer::~KateRenderer()
 void KateRenderer::updateAttributes ()
 {
   m_attributes = m_doc->highlight()->attributes (config()->schema ());
+  QString s = "";
+  for (int i = 0; i < 100; ++i) {
+    m_widthOf[i] = config()->fontMetrics().width(s);
+    s.append('x');
+  }
 }
 
 KTextEditor::Attribute::Ptr KateRenderer::attribute(uint pos) const
