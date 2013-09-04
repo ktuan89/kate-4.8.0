@@ -49,7 +49,7 @@ void KateFileTreePluginSettings::save()
   m_group.writeEntry("sortRole", m_sortRole);
   m_group.writeEntry("showFullPathOnRoots", m_showFullPathOnRoots);
 
-  kDebug(debugArea()) << "save config!";
+  // kDebug(debugArea()) << "save config!";
   m_group.sync();
 }
 
