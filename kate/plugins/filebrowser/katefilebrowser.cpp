@@ -267,12 +267,6 @@ void KateFileBrowser::openSelectedFiles()
 void KateFileBrowser::updateDirOperator(const KUrl& u)
 {
   m_dirOperator->setUrl(u, true);
-  // ktuan debug
-  int db_area = KDebug::registerArea("ktuan-debug");
-  KFileItemList list = m_dirOperator->dirLister()->items();
-  foreach (const KFileItem& item, list) {
-    kDebug(db_area) << item.url();
-  }
 }
 
 void KateFileBrowser::updateUrlNavigator(const KUrl& u)
