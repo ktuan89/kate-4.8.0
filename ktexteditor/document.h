@@ -262,7 +262,7 @@ class KTEXTEDITOR_EXPORT Document : public KParts::ReadWritePart
      */
     virtual bool documentReload () = 0;
 
-    virtual bool markNeedReload () {}
+    virtual bool markNeedReload () { return true; }
     virtual void reloadIfNeeded () {}
 
     /**
