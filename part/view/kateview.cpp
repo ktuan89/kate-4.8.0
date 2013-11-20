@@ -136,8 +136,8 @@ KateView::KateView( KateDocument *doc, QWidget *parent )
 
   setComponentData ( KateGlobal::self()->componentData () );
 
-  setObjectName("kateviewid");
-  setStyleSheet("#kateviewid {background-image: url(:/makoto.jpg); background-repeat: repeat-xy;}");
+  // setObjectName("kateviewid");
+  // setStyleSheet("#kateviewid {background-image: url(:/makoto.jpg); background-repeat: repeat-xy;}");
 
   // selection if for this view only and will invalidate if becoming empty
   m_selection.setView (this);
@@ -1595,12 +1595,12 @@ void KateView::switchToConsole ()
   hideViModeBar();
 }
 
-void KateView::paintEvent(QPaintEvent *event) {
+/*void KateView::paintEvent(QPaintEvent *event) {
   QStyleOption o;
   o.initFrom(this);
   QPainter p(this);
   style()->drawPrimitive(QStyle::PE_Widget, &o, &p, this);
-}
+}*/
 
 KateRenderer *KateView::renderer ()
 {

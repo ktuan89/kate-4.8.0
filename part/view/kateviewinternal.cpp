@@ -3024,7 +3024,7 @@ void KateViewInternal::paintEvent(QPaintEvent *e)
 
   QPainter paint(this);
   paint.setRenderHints (QPainter::Antialiasing);
-  paint.setOpacity(0.98);
+  // paint.setOpacity(0.98);
 
 
   // TODO put in the proper places

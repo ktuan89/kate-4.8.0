@@ -537,7 +537,7 @@ class KATEPART_TESTS_EXPORT KateView : public KTextEditor::View,
     void slotTextInserted ( KTextEditor::View *view, const KTextEditor::Cursor &position, const QString &text);
 
   protected:
-    virtual void paintEvent(QPaintEvent *event);
+    // virtual void paintEvent(QPaintEvent *event);
     void contextMenuEvent( QContextMenuEvent* );
 
   private Q_SLOTS:
